@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apocalipsis · Mapa de estudio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#EDF0F5; --paper:#FFFFFF; --ink:#1B2440; --muted:#5A6378; --line:#D5DAE4;
+  --sun:#E39B2E; --sunsoft:#FBE7C6; --sky:#24305A;
+  --c1:#2E8C7E; --c2:#3B69AD; --c3:#7D55B0; --c4:#BF4F3A; --c5:#A97A0E; --c6:#B03A78;
+  --ok:#2F8A52; --okbg:#E3F3E8; --bad:#C0392B; --badbg:#FBE5E2;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121726; --paper:#1A2135; --ink:#E8ECF5; --muted:#A0A9BE; --line:#2C3550;
+    --sun:#F0AE45; --sunsoft:#3A2F1C; --sky:#0C1020;
+    --c1:#4FC1AE; --c2:#7BA4E6; --c3:#B293E0; --c4:#EC8471; --c5:#E2B54A; --c6:#E58AB8;
+    --ok:#5CCB86; --okbg:#173326; --bad:#F07B6C; --badbg:#3A1E1B;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121726; --paper:#1A2135; --ink:#E8ECF5; --muted:#A0A9BE; --line:#2C3550;
+  --sun:#F0AE45; --sunsoft:#3A2F1C; --sky:#0C1020;
+  --c1:#4FC1AE; --c2:#7BA4E6; --c3:#B293E0; --c4:#EC8471; --c5:#E2B54A; --c6:#E58AB8;
+  --ok:#5CCB86; --okbg:#173326; --bad:#F07B6C; --badbg:#3A1E1B;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.55}
+h1,h2,h3{font-family:"Literata",Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:6px}
+
+/* Hero */
+.hero{background:var(--sky);color:#F4F1EA;padding:28px 20px 0;overflow:hidden}
+.hero-in{max-width:980px;margin:0 auto}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:700;letter-spacing:-.01em}
+.hero p{margin:.4rem 0 0;color:#C9CFE0;max-width:60ch}
+.arc{display:block;width:100%;height:auto;margin-top:8px}
+.arc text{font-family:"Figtree",sans-serif}
+.arc .node{cursor:pointer}
+.arc .node:hover circle,.arc .node:focus circle{fill:var(--sun)}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--paper);border-bottom:1px solid var(--line)}
+.nav-in{max-width:980px;margin:0 auto;display:flex;gap:4px;padding:8px 12px;overflow-x:auto}
+.tab{border:0;background:none;padding:10px 16px;border-radius:999px;font-weight:600;white-space:nowrap;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+.panel[hidden]{display:none}
+
+/* Class legend / filter */
+.legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 20px}
+.legend span.lbl{color:var(--muted);font-size:.9rem;margin-right:4px}
+.cbtn{border:2px solid var(--cc);background:transparent;color:var(--ink);padding:5px 12px;border-radius:999px;font-size:.9rem;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+.cbtn::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--cc)}
+.cbtn[aria-pressed="true"]{background:var(--cc);color:#fff}
+.cbtn[aria-pressed="true"]::before{background:#fff}
+.cbtn.clear{--cc:var(--line);}
+.cbtn.clear::before{display:none}
+
+.c1{--cc:var(--c1)}.c2{--cc:var(--c2)}.c3{--cc:var(--c3)}.c4{--cc:var(--c4)}.c5{--cc:var(--c5)}
+
+/* Sections */
+.block{background:var(--paper);border:1px solid var(--line);border-radius:18px;margin-bottom:22px;overflow:hidden}
+.block>summary{list-style:none;cursor:pointer;padding:18px 20px;display:flex;gap:16px;align-items:center}
+.block>summary::-webkit-details-marker{display:none}
+.roman{flex:none;width:52px;height:52px;border-radius:50%;background:var(--sunsoft);color:var(--ink);display:grid;place-items:center;font-family:"Literata",serif;font-weight:700;font-size:1.15rem;border:2px solid var(--sun)}
+.roman.pan{font-size:1.4rem}
+.shead{flex:1;min-width:0}
+.shead h2{font-size:1.3rem}
+.shead .meta{color:var(--muted);font-size:.9rem;margin-top:2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chev{flex:none;transition:transform .2s;color:var(--muted)}
+.block[open] .chev{transform:rotate(180deg)}
+.sbody{padding:0 20px 20px}
+.badge{display:inline-flex;align-items:center;font-size:.75rem;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--cc);color:#fff;white-space:nowrap}
+.merge{font-size:.82rem;color:var(--muted);background:var(--bg);border-radius:10px;padding:8px 12px;margin:0 0 14px}
+
+.point{border-left:4px solid var(--cc);padding:10px 0 10px 16px;margin:14px 0;transition:opacity .2s}
+.point h3{font-family:"Figtree",sans-serif;font-size:1.02rem;font-weight:700;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.point p{margin:.35rem 0 0;max-width:72ch}
+.point ul{margin:.4rem 0 0;padding-left:1.2rem}
+.point li{margin:.15rem 0}
+.dim .point:not(.hit),.dim .block:not(.hasHit){opacity:.28}
+.dim .block.hasHit{opacity:1}
+.verses{display:grid;gap:8px;margin-top:10px}
+.verse{background:var(--bg);border-radius:12px;padding:9px 12px;font-size:.93rem}
+.verse b{font-weight:700}
+.verse .ver{font-size:.75rem;color:var(--muted);font-weight:600;margin-left:6px}
+.verse .g{display:block;color:var(--muted);margin-top:2px}
+.credit{font-size:.8rem;color:var(--muted);margin-top:4px}
+.sub{font-family:"Literata",serif;font-size:1.05rem;margin:22px 0 4px;color:var(--muted);font-weight:600}
+
+/* Verse list */
+.vgroup{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px 20px;margin-bottom:16px}
+.vgroup h2{font-size:1.1rem;margin-bottom:8px}
+.vrow{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.vrow:first-of-type{border-top:0}
+.vrow input{width:20px;height:20px;margin-top:2px;accent-color:var(--ok);flex:none}
+.vrow label{flex:1;cursor:pointer}
+.vrow.done label b{text-decoration:line-through;opacity:.6}
+.vprog{color:var(--muted);font-size:.9rem;margin:0 0 16px}
+
+/* Quiz */
+.qwrap{max-width:720px;margin:0 auto}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;color:var(--muted);font-size:.92rem}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;background:var(--sun);width:0;transition:width .3s}
+.qcard{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px}
+.qcard h2{font-size:1.3rem;margin:10px 0 18px;font-weight:600}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;border:2px solid var(--line);background:var(--paper);border-radius:14px;padding:13px 16px;font-size:1rem;display:flex;gap:12px;align-items:flex-start}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt .k{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.right .k{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.opt.wrong .k{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.fb{margin-top:16px;border-radius:14px;padding:14px 16px}
+.fb.ok{background:var(--okbg)}
+.fb.no{background:var(--badbg)}
+.fb strong{display:block;font-size:1.05rem;margin-bottom:4px}
+.fb .rev{margin-top:8px;font-size:.9rem;color:var(--muted)}
+.fb .rev a{color:inherit;font-weight:600}
+.actions{display:flex;justify-content:flex-end;margin-top:16px;gap:10px;flex-wrap:wrap}
+.btn{border:0;background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:999px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.bible{display:inline-block;margin-top:10px;background:var(--sunsoft);border:1px solid var(--sun);border-radius:10px;padding:6px 12px;font-size:.92rem}
+.score{font-family:"Literata",serif;font-size:3rem;font-weight:700;margin:4px 0}
+.cls{display:grid;gap:10px;margin:18px 0}
+.crow{display:grid;grid-template-columns:80px 1fr 56px;gap:10px;align-items:center;font-size:.92rem}
+.crow .track{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.crow .track i{display:block;height:100%;background:var(--cc)}
+.miss{margin-top:18px}
+.miss h3{font-family:"Figtree",sans-serif;font-size:1rem;margin:16px 0 6px}
+.miss ul{margin:0;padding-left:1.2rem}
+.miss a{color:var(--ink);font-weight:600}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;counter-reset:f}
+.fstep{flex:1 1 150px;background:var(--bg);border-radius:12px;padding:9px 12px;border-top:3px solid var(--cc);font-size:.92rem}
+.fstep b{display:block}
+.fstep span{display:block;color:var(--muted);font-size:.86rem;margin-top:2px}
+.fstep.hit2{background:var(--sunsoft);border-top-color:var(--sun)}
+.eras{display:grid;gap:6px;margin-top:10px}
+.era{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;background:var(--bg);border-radius:12px;padding:8px 12px}
+.era .en{width:26px;height:26px;border-radius:50%;background:var(--sky);color:#F4F1EA;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.era b{display:block}
+.era div span{color:var(--muted);font-size:.88rem}
+.era .ed{font-size:.85rem;font-weight:600;text-align:right}
+@media (max-width:520px){.era{grid-template-columns:30px 1fr}.era .ed{grid-column:2;text-align:left}}
+.map7{display:block;width:100%;max-width:520px;height:auto;margin-top:10px}
+.c6{--cc:var(--c6)}
+.tagb{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.cardq{display:block;font-family:"Figtree",sans-serif;font-size:.98rem;font-weight:500;background:var(--bg);border-radius:12px;padding:10px 14px;margin-top:10px;line-height:1.5}
+.fullc{display:block;line-height:1.45;font-size:.93rem}
+.build{display:grid;gap:10px}
+.bslot{display:grid;gap:4px;border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.bslot.right{border-color:var(--ok);background:var(--okbg)}
+.bslot.wrong{border-color:var(--bad);background:var(--badbg)}
+.blab{font-weight:700;font-size:.9rem}
+.bslot select{font:inherit;font-size:.92rem;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);width:100%;max-width:100%}
+.bfix{font-size:.85rem;color:var(--ok);font-weight:600}
+.bfix:empty{display:none}
+.tblwrap{overflow-x:auto;margin-top:10px;border:1px solid var(--line);border-radius:12px}
+.ctbl{border-collapse:collapse;min-width:1150px;font-size:.86rem}
+.ctbl th,.ctbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.ctbl thead th{background:var(--bg);font-weight:700}
+.ctbl tbody th{white-space:nowrap}
+.qtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.qt{font-size:.78rem;font-weight:600;background:var(--bg);border-radius:999px;padding:3px 10px}
+.qt.again{background:var(--sunsoft);color:var(--ink)}
+.hint{color:var(--muted);font-size:.9rem;margin:0 0 10px}
+.vt{width:100%;font:inherit;font-size:1.05rem;line-height:1.5;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);resize:vertical}
+.vt:focus{outline:none;border-color:var(--sun)}
+.vdiff{font-size:1.05rem;line-height:2;margin:8px 0}
+.w{padding:1px 5px;border-radius:6px}
+.w.ok{background:var(--okbg);color:var(--ok)}
+.w.miss{background:var(--badbg);color:var(--bad);text-decoration:underline dotted}
+.w.extra{background:var(--badbg);color:var(--bad);text-decoration:line-through}
+.vlegend{font-size:.85rem;margin:4px 0}
+.vfull{margin:10px 0 0;font-size:.95rem}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcol{display:grid;gap:8px;align-content:start}
+.mi,.mo{text-align:left;border:2px solid var(--line);background:var(--paper);border-radius:12px;padding:9px 10px;font-size:.9rem;display:flex;gap:8px;align-items:flex-start;line-height:1.35}
+.mi .k,.mo .k{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.75rem;font-weight:700}
+.mi.sel{border-color:var(--sun);background:var(--sunsoft)}
+.mi.paired .k,.mo.paired .k{background:var(--sky);border-color:var(--sky);color:#F4F1EA}
+.mo.paired{border-color:var(--sky)}
+.mi.right,.mo.right{border-color:var(--ok);background:var(--okbg)}
+.mi.wrong,.mo.wrong{border-color:var(--bad);background:var(--badbg)}
+.mi:disabled,.mo:disabled{cursor:default}
+.oseq{margin:0 0 10px;padding-left:1.6rem;display:grid;gap:6px;min-height:40px}
+.oseq li::marker{font-weight:700;color:var(--muted)}
+.oempty{color:var(--muted);font-size:.9rem;list-style:none;margin-left:-1.6rem;border:2px dashed var(--line);border-radius:12px;padding:10px}
+.opool{display:flex;flex-wrap:wrap;gap:8px}
+.ochip{border:2px solid var(--line);background:var(--paper);border-radius:12px;padding:8px 12px;font-size:.92rem;text-align:left}
+.ochip.pool{border-style:dashed}
+.oseq .ochip{width:100%;border-color:var(--sky)}
+.ochip.right{border-color:var(--ok);background:var(--okbg)}
+.ochip.wrong{border-color:var(--bad);background:var(--badbg)}
+.plist{margin:6px 0 0;padding-left:1.2rem}
+.crow{grid-template-columns:150px 1fr 48px}
+@media (max-width:520px){.mi,.mo{font-size:.82rem;padding:8px}.crow{grid-template-columns:110px 1fr 44px}}
+footer{max-width:980px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:.82rem}
+@media (max-width:600px){
+  .block>summary{padding:14px}
+  .sbody{padding:0 14px 16px}
+  .roman{width:44px;height:44px;font-size:1rem}
+  .qcard{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-in">
+    <h1>Apocalipsis</h1>
+    <p>Mapa de estudio de las clases 1 a 5 · Prof. Camilo Buitrago. El arco sigue el bosquejo de Ap. 1:19: lo que has visto, lo que es y lo que ha de suceder. Toca un punto para ir a esa parte.</p>
+    <svg class="arc" viewBox="0 0 900 230" role="navigation" aria-label="Secciones del libro">
+      <defs>
+        <radialGradient id="sg" cx="50%" cy="100%" r="60%">
+          <stop offset="0" stop-color="#F6C46B"/><stop offset="1" stop-color="#E39B2E"/>
+        </radialGradient>
+      </defs>
+      <circle cx="450" cy="250" r="95" fill="url(#sg)"/>
+      <path d="M90 230 A360 205 0 0 1 810 230" fill="none" stroke="#5A668F" stroke-width="2" stroke-dasharray="4 7"/>
+      <g id="arcnodes"></g>
+    </svg>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="nav-in" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="mapa">Mapa de estudio</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="quiz">Quiz de repaso</button>
+  </div>
+</nav>
+
+<main>
+  <section class="panel" id="p-mapa">
+    <div class="legend" id="legend"><span class="lbl">Resaltar por clase:</span></div>
+    <div id="map"></div>
+  </section>
+
+
+  <section class="panel" id="p-quiz" hidden>
+    <div class="qwrap" id="quiz"></div>
+  </section>
+</main>
+<footer>Material de estudio personal basado en las diapositivas del Instituto Bíblico Filadelfia JV (Apocalipsis, Prof. Camilo Buitrago). Los versículos aparecen como referencia con un resumen de su idea; búscalos completos en la versión indicada. El quiz de repaso trae 25 preguntas por intento: cambia las preguntas al azar, repite algunas del intento anterior, deja de mostrar las que ya acertaste varias veces y guarda tu progreso en este navegador.</footer>
+
+<script>
+const CL = {1:"Clase 1",2:"Clase 2",3:"Clase 3",4:"Clase 4",5:"Clase 5",6:"Repaso del profe"};
+const badge = c => `<span class="badge c${c}">${c==6?"Repaso":"C"+c}</span>`;
+
+/* ---------- CONTENIDO ---------- */
+const FLOW = (items)=>`<div class="flow">${items.map(x=>`<div class="fstep${x.k?" "+x.k:""}"><b>${x.t}</b>${x.s?`<span>${x.s}</span>`:""}</div>`).join("")}</div>`;
+const ERAS = [
+ ["Éfeso","Período apostólico","Pentecostés – 64 d.C."],
+ ["Esmirna","Persecución y maldad","64 – 313 d.C."],
+ ["Pérgamo","Corrupción en la Iglesia","313 – 606 d.C."],
+ ["Tiatira","Auge y supremacía del catolicismo","606 – 1517 d.C."],
+ ["Sardis","Reforma protestante","1517 – 1750 d.C."],
+ ["Filadelfia","Énfasis misionero y evangelístico","1750 – 1900 d.C."],
+ ["Laodicea","Apostasía de la Iglesia","1900 – su segunda venida"]
+];
+const ERAS_HTML = `<div class="eras">${ERAS.map((e,i)=>`<div class="era"><span class="en">${i+1}</span><div><b>${e[0]}</b><span>${e[1]}</span></div><span class="ed">${e[2]}</span></div>`).join("")}</div>`;
+
+const CH=[["Pérgamo",39.12,27.18],["Tiatira",38.92,27.84],["Esmirna",38.42,27.14],["Sardis",38.49,28.04],["Éfeso",37.94,27.34],["Filadelfia",38.35,28.52],["Laodicea",37.84,29.11]];
+const MAP7 = (()=>{const X=lo=>40+(lo-26.9)*170, Y=la=>30+(39.3-la)*170;
+ return `<svg class="map7" viewBox="0 0 460 300" role="img" aria-label="Ubicación de las siete iglesias en Asia Menor">
+ <rect x="0" y="0" width="460" height="300" rx="14" fill="var(--bg)"/>
+ <text x="22" y="150" font-size="13" fill="var(--muted)" transform="rotate(-90 22 150)" text-anchor="middle">Mar Egeo (oeste)</text>
+ <polyline points="${CH.map(c=>X(c[2])+","+Y(c[1])).join(" ")}" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 5"/>
+ ${CH.map((c,i)=>`<g><circle cx="${X(c[2])}" cy="${Y(c[1])}" r="12" fill="var(--sky)"/><text x="${X(c[2])}" y="${Y(c[1])+4}" font-size="11" font-weight="700" text-anchor="middle" fill="#F4F1EA">${i+1}</text><text x="${X(c[2])+17}" y="${Y(c[1])+4}" font-size="13" fill="var(--ink)">${c[0]}</text></g>`).join("")}
+ <text x="440" y="285" font-size="11" fill="var(--muted)" text-anchor="end">Provincia de Asia · el número indica el orden de las cartas</text></svg>`;})();
+
+const SECTIONS = [
+{
+ id:"panorama", num:"✦", title:"Panorama del libro", ref:"Datos generales", clases:[1],
+ points:[
+  {c:1, t:"Bibliografía", list:["«He aquí, yo vengo pronto: el inminente regreso de Cristo» – Abraham Peña Soler.","«Apocalipsis: la consumación del plan eterno de Dios» – Evis L. Carballosa (Portavoz).","«Eventos del porvenir: estudios de escatología bíblica» – Dwight Pentecost (Vida).","«Apocalipsis: comentario exegético al texto griego del NT» – Samuel Pérez Millos (Clie).","«Apocalipsis: comentario al Nuevo Testamento» – Simon J. Kistemaker (Libros Desafío)."]},
+  {c:1, t:"Posturas teológicas del Apocalipsis", d:"Las cuatro formas principales de interpretar el libro:", list:["1. Postura preterista.","2. Postura historicista.","3. Postura idealista o simbólica.","4. Postura futurista."]},
+  {c:1, t:"Generalidades del libro", list:["Fecha de escritura aproximada: 94 – 97 d.C.","Escrito por el apóstol Juan en la isla de Patmos.","Escrito en su gran mayoría con lenguaje simbólico.","Destinatarios: algunas iglesias de Asia Menor.","Género literario: apocalíptico."]},
+  {c:1, t:"Propósitos del libro", list:["1. Traer aliento y consuelo a los hijos de Dios en medio de la persecución.","2. Es un libro profético: habla de los eventos que están por venir.","3. Poner en evidencia la soberanía de Dios.","4. Revelar la consumación del plan de Dios.","5. Es un llamado a aceptar la gracia de Dios.","6. Exponer la justicia y santidad de Dios."]},
+  {c:1, t:"Las dispensaciones", list:["1. Inocencia (Génesis 1–3).","2. Conciencia (Génesis 3–8).","3. Gobierno humano (Génesis 9–11).","4. Promesa (Génesis 12 – Éxodo 19).","5. Ley (Éxodo 20 – Hechos 2).","6. Iglesia (desde Pentecostés hasta el rapto).","7. La gran tribulación (desde el rapto de la Iglesia hasta la segunda venida de Jesucristo).","8. Reino milenial y estado eterno."]},
+  {c:1, t:"Diagrama del libro", d:"Así ubica la clase los grandes bloques del libro en el tiempo:",
+   html: FLOW([
+    {t:"Caps. 1–3", s:"La época actual de la Iglesia: las siete cartas"},
+    {t:"Cristo viene por sus santos", s:"El rapto", k:"hit2"},
+    {t:"Caps. 4–19 · 7 años", s:"En la tierra, el período de tribulación: los siete sellos; del séptimo sello salen las siete trompetas y de estas las siete copas. La gran tribulación ocupa los últimos 3½ años. En el cielo, mientras tanto: el tribunal de Cristo y las bodas del Cordero."},
+    {t:"Cristo viene con sus santos", s:"Segunda venida", k:"hit2"},
+    {t:"Caps. 20–22 · el milenio (1.000 años)", s:"Cristo reina mil años en la tierra; Satanás está en el abismo y al final va al lago de fuego"},
+    {t:"El juicio del gran trono blanco", s:"Cierra el milenio"},
+    {t:"Estado eterno", s:"Cielo nuevo y tierra nueva"}
+   ])},
+  {c:1, t:"Temas de los capítulos vistos (1 al 7)", html:()=>`<div class="eras">${CAPS.map((x,i)=>`<div class="era"><span class="en">${i+1}</span><div><b>${x[0]}</b><span>${x[1]}</span></div><span class="ed"></span></div>`).join("")}</div>`},
+  {c:6, t:"Ubicador de versículos", d:"Para responder preguntas como «¿en qué versículo está el saludo?» o «¿de qué habla Apocalipsis 3:16?»:", html:()=>`<div class="tblwrap"><table class="ctbl" style="min-width:0;width:100%"><thead><tr><th>Pasaje</th><th>Tema</th></tr></thead><tbody>${VREF.map(([r,x])=>`<tr><th>Ap. ${r}</th><td>${x}</td></tr>`).join("")}</tbody></table></div>`},
+  {c:1, t:"Versículo clave y bosquejo", d:"Apocalipsis 1:19 divide el libro en tres partes:",
+   v:[["Apocalipsis 1:19","NBLA","Juan debe escribir lo que ha visto, lo que es y lo que sucederá después."]],
+   list:["I. Las cosas que has visto (capítulo 1).","II. Las cosas que son (capítulos 2–3).","III. Las cosas que han de suceder después de estas (capítulos 4–22)."]}
+ ]
+},
+{
+ id:"s1", num:"I", title:"Las cosas que has visto", short:"Lo que has visto", ref:"Apocalipsis 1", clases:[1,2],
+ merge:"Los puntos 1 y 2 se vieron en la Clase 1. El saludo se repitió al inicio de la Clase 2, donde se desarrolló la triple exaltación de Cristo y el punto 3.",
+ points:[
+  {c:1, t:"1. Una bienaventuranza más de Jesucristo (1:1-3)", d:"«Apocalipsis» significa «revelación»: correr el velo. Su revelación destaca la autoridad y permanencia de la Palabra de Dios.",
+   v:[["Apocalipsis 1:3","","Es dichoso quien lee, oye y guarda lo escrito en esta profecía, porque el tiempo está cerca."]]},
+  {c:1, t:"La cadena de la revelación", d:"La revelación pasa de mano en mano hasta llegar a nosotros:",
+   html: FLOW([{t:"El Padre"},{t:"El Hijo"},{t:"El ángel"},{t:"Juan"},{t:"La iglesia", s:"Juan lo escribe para ella"}])},
+  {c:1, badgeExtra:2, t:"2. Saludo a las iglesias (1:4-8)", d:"El saludo proviene de la Trinidad:",
+   list:["A. Dios Padre: el que es, el que era y el que será.","B. Espíritu Santo: los siete espíritus que están delante de su trono.","C. Jesucristo y su triple exaltación."],
+   v:[["Apocalipsis 1:4-5","NBLA","Juan saluda a las siete iglesias que están en Asia: gracia y paz de parte del que es, era y ha de venir, de los siete Espíritus ante su trono y de Jesucristo, testigo fiel, primogénito de los muertos y soberano de los reyes de la tierra."]], vc:2},
+  {c:2, t:"La triple exaltación de Jesucristo", list:["Profeta: el testigo fiel.","Sacerdote: el primogénito de los muertos.","Rey: el soberano de los reyes de la tierra."]},
+  {c:2, t:"3. La visión de Cristo glorificado (1:9-20)", d:"Juan escribe siendo testigo presencial de eventos escatológicos. Por eso la clase cita Juan 21:22: Jesús le dijo a Pedro que, si quería, Juan quedaría hasta que Él viniera; y en la visión Juan llegó a ver los eventos de su venida. La visión de Cristo glorificado es la que introduce las cartas a las iglesias.",
+   list:["A. Los siete candeleros reflejan tres aspectos de la Iglesia: su pureza, su alto costo y su misión de ser luz.","B. Jesucristo, como Dios, tiene facultad de juzgar.","Las siete estrellas son los ángeles (mensajeros) de las siete iglesias, y los candeleros son las siete iglesias (1:20)."],
+   v:[["Juan 21:22","NBLA","Jesús a Pedro, sobre Juan: si quiero que él se quede hasta que yo venga, ¿a ti qué? Tú, sígueme."],["Apocalipsis 1:20","","Las siete estrellas son los ángeles de las siete iglesias y los siete candeleros son las siete iglesias."]]}
+ ]
+},
+{
+ id:"s2", num:"II", title:"Las cosas que son", short:"Lo que es", ref:"Apocalipsis 2–3", clases:[2,3,4],
+ merge:"Éfeso y el inicio de Esmirna se vieron en la Clase 2; de Esmirna al inicio de Laodicea en la Clase 3; Laodicea se completó en la Clase 4. Ojo: en la Clase 4 la diapositiva del período de Laodicea salió titulada «La iglesia de Filadelfia», pero por su contenido (apostasía, desde 1900) corresponde a Laodicea.",
+ points:[
+  {c:2, t:"Cartas a las iglesias", d:"Jesús revela un conocimiento detallado de siete iglesias y se dirige a ellas con palabras de ánimo, reprensión, exhortación y promesa. Con esto hace un llamado universal a todas las iglesias a ser fieles y permanecer firmes. Las siete iglesias estaban en Asia Menor: Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia y Laodicea. El mapa de la clase las ubica en la región de Asia, al oriente del mar Mediterráneo (con Roma, Macedonia, Acaya, Creta, Chipre, Jerusalén y Egipto como referencia).", html: MAP7},
+  {c:6, t:"Estructura de cada carta", d:"Todas las cartas siguen el mismo esquema:", list:["1. Presentación: quién habla, el autor (el Señor se presenta con un atributo distinto a cada iglesia).","2. Reprensión o exhortación: lo que la iglesia hace bien o mal y el llamado que recibe.","3. Promesa: lo que recibirá el vencedor."]},
+  {c:2, t:"Las siete iglesias como períodos de la historia", badgeExtra:3, vc:4, d:"Según la clase, cada iglesia representa una etapa de la historia de la Iglesia:", html: ERAS_HTML},
+  {c:3, t:"Cuadro de las siete cartas", d:"Las siete cartas lado a lado, con lo de las diapositivas ampliado con lo que dice Jesús en cada carta (desliza la tabla hacia los lados en el celular):", html:()=>`<div class="tblwrap"><table class="ctbl"><thead><tr><th>Iglesia</th><th>Significado</th><th>Se presenta</th><th>Lo que Jesús ve en ella</th><th>Exhortación</th><th>Promesa al vencedor</th><th>Período</th></tr></thead><tbody>${IGL.map((g,i)=>`<tr><th>${i+1}. ${g.n}</th><td>${g.sig}</td><td>${g.aut}</td><td>${g.cond}</td><td>${g.exh}</td><td>${g.prom}</td><td>${g.per} (${g.fec})</td></tr>`).join("")}</tbody></table></div>`},
+  {c:2, t:"1. Éfeso (Ap. 2:1-7) · «Deseo ardiente»", d:"Representa el período apostólico, desde Pentecostés al 64 d.C.", list:["A. El autor es aquel que acompaña a su iglesia.","B. Es trabajadora y paciente, pero sin el primer amor.","C. Les exhorta al arrepentimiento y a recordar su estado pasado.","D. El vencedor volverá a disfrutar del bienestar que se perdió en el Edén."],
+   v:[["Apocalipsis 2:4-5","","Tiene contra ella que dejó su primer amor; debe recordar de dónde cayó y arrepentirse."]]},
+  {c:6, t:"Éfeso y la diosa Artemisa", d:"Éfeso era el gran centro del culto a la diosa Artemisa, la «Diana de los efesios». Su templo era una de las siete maravillas del mundo antiguo.", v:[["Hechos 19:28","","Los artesanos de Éfeso, enfurecidos contra Pablo, gritaban que grande era Diana de los efesios."]]},
+  {c:2, badgeExtra:3, t:"2. Esmirna (Ap. 2:8-11) · «Mirra (amargo)»", d:"Representa el período de persecución y maldad, del 64 al 313 d.C., hasta el emperador Constantino (Edicto de Milán, 313).", list:["A. El autor es el Eterno soberano quien venció la muerte.","B. Tiene que pagar un alto costo: pobre en apariencia, pero rica por dentro.","C. Les anima a no temer y a ser fieles hasta la muerte.","D. El vencedor tendrá la compañía del Señor por siempre."],
+   v:[["Apocalipsis 2:10","","No temas lo que vas a padecer; sé fiel hasta la muerte y recibirás la corona de la vida."]], vc:3},
+  {c:3, t:"3. Pérgamo (Ap. 2:12-17) · «Matrimonio consumado»", d:"Representa el período de la corrupción en la Iglesia, del 313 al 606 d.C.", list:["A. El autor es justo y firme en su carácter.","B. Retuvo el nombre del Señor y no negó la fe.","C. Les exhorta a rechazar las falsas doctrinas, como la doctrina de Balaam (2:14), mencionada en el repaso.","D. El vencedor recibirá reconocimiento y conocerá misterios invaluables de Dios."]},
+  {c:3, t:"4. Tiatira (Ap. 2:18-29) · «Ofrecimiento de víctimas»", d:"Representa el período de auge y supremacía del catolicismo, del 606 al 1517 d.C.", list:["A. El autor es el Hijo de Dios y juez soberano.","B. Sirve con amor, pero tolera un liderazgo corrupto.","C. Les enseña las consecuencias de no arrepentirse.","D. El vencedor recibirá autoridad y sabiduría."]},
+  {c:3, t:"5. Sardis (Ap. 3:1-6) · «Los que salieron»", d:"Representa el período de la reforma protestante, del 1517 al 1750 d.C.", list:["A. El autor tiene la plenitud del Espíritu Santo y dirige su iglesia.","B. Exhorta a quienes no han puesto en práctica la Palabra.","C. Destaca al remanente que no ha manchado sus vestiduras.","D. Al vencedor le garantiza su estadía en el cielo."]},
+  {c:3, t:"6. Filadelfia (Ap. 3:7-13) · «Amor fraternal»", d:"Representa el período del énfasis misionero y evangelístico, del 1750 al 1900 d.C.", list:["A. El autor es el único digno de dar entrada al cielo.","B. Es la Iglesia dirigida y fundamentada en la Palabra de Dios.","C. Les invita a tener paciencia: pronto verán al Señor.","D. El vencedor tendrá una íntima comunión con Él en la nueva Jerusalén."]},
+  {c:3, badgeExtra:4, t:"7. Laodicea (Ap. 3:14-22) · «Juicio a las naciones»", d:"Representa el período de la apostasía de la Iglesia, desde 1900 hasta su segunda venida.", list:["A. El autor es el único infalible Autor de la creación.","B. Es la Iglesia pobre, miserable y vacía.","C. Les invita al arrepentimiento y a hacer tesoros en los cielos.","D. El vencedor reinará con Cristo en el cielo."],
+   v:[["Apocalipsis 3:15-17","","No es fría ni caliente, sino tibia; dice ser rica, pero es desventurada, miserable, pobre, ciega y desnuda."]], vc:4}
+ ]
+},
+{
+ id:"s3", num:"III", title:"Las cosas que han de ser después de estas", short:"Lo que ha de ser", ref:"Apocalipsis 4–7 (visto hasta la Clase 5)", clases:[4,5],
+ merge:"Los puntos A y B del trono de Dios se vieron en la Clase 4; la adoración (C), el rollo, los seis sellos y los sellados por Dios en la Clase 5. En la diapositiva el sexto sello aparece marcado con la letra «D»; por el orden le corresponde la «F».",
+ points:[
+  {c:4, t:"1. El trono de Dios (Ap. 4:1-11) · A. El trono y los 24 ancianos (4:1-5)", list:["La frase «sube acá» ilustra el rapto de la Iglesia.","La puerta abierta en el cielo le permite a Juan conocer la revelación final.","Los 24 ancianos representan la Iglesia del Señor, conformada por judíos y gentiles."]},
+  {c:4, t:"B. Los cuatro seres vivientes (4:6-8)", d:"Son seres angelicales (querubines): un orden elevado de ángeles que ilustran lo que los evangelios dicen de Cristo:",
+   list:["El león: fuerza, ira y majestad (Mateo).","El becerro: obediencia (Marcos).","El hombre: su humanidad (Lucas).","El águila: visión permanente (Juan)."]},
+  {c:4, tag:"Para profundizar", t:"Los seres vivientes y la imagen de Cristo en cada evangelio", list:["Mateo (león) presenta a Cristo como el Rey.","Marcos (becerro) lo presenta como el Siervo obediente.","Lucas (hombre) lo presenta como el Hijo del Hombre.","Juan (águila) lo presenta como el Hijo de Dios, con una visión que se eleva."]},
+  {c:4, tag:"Texto bíblico", t:"Lo que dice Apocalipsis 4", list:["Alrededor del trono hay 24 tronos, con 24 ancianos vestidos de ropas blancas y con coronas de oro (4:4).","Del trono salen relámpagos, truenos y voces; delante arden siete lámparas de fuego, que son los siete espíritus de Dios (4:5).","Los cuatro seres vivientes están llenos de ojos, tienen seis alas y día y noche dicen: «Santo, santo, santo» (4:6-8).","Los ancianos echan sus coronas delante del trono (4:10)."]},
+  {c:5, t:"C. La adoración al Soberano (4:9-11)", d:"Los seres vivientes y los veinticuatro ancianos dan honra, gloria y reconocimiento al único digno de recibirla."},
+  {c:5, t:"2. El rollo y sus sellos (Ap. 5)", list:["A. Alguien digno de desatarlos (5:1-7).","B. La dignidad del Cordero (5:8-10).","C. La adoración celestial al Cordero (5:11-14)."],
+   d:"El Cordero es digno de tomar siete cosas: poder, riquezas, sabiduría, fortaleza, honra, gloria y alabanza."},
+  {c:5, tag:"Texto bíblico", t:"Lo que dice Apocalipsis 5", list:["El rollo está escrito por dentro y por fuera, sellado con siete sellos (5:1).","Nadie en el cielo ni en la tierra era digno de abrirlo, y Juan lloraba mucho (5:3-4).","Un anciano anuncia que el León de la tribu de Judá, la raíz de David, ha vencido (5:5).","Juan ve un Cordero como inmolado, con siete cuernos y siete ojos; Él toma el rollo (5:6-7).","Los ancianos tienen copas de oro con incienso, que son las oraciones de los santos, y cantan un cántico nuevo (5:8-9)."]},
+  {c:5, t:"3. Los seis sellos (Ap. 6)", d:"Los primeros sellos describen cuatro caballos con sus jinetes que simbolizan muerte y destrucción en la tierra.",
+   list:["Primer sello (6:1-2): habla del anticristo, que vendrá con una paz aparente.","Segundo sello (6:3-4): simboliza la muerte que traerá luego de su falsa paz.","Tercer sello (6:5-6; Lam. 4:8-9): ilustra el sufrimiento por la escasez de comida.","Cuarto sello (6:7-8): habla de la muerte que traerán las guerras.","Quinto sello (6:9-11): muchos serán salvos, pero perseguidos hasta morir.","Sexto sello (6:12-17): la ira del Cordero se manifestará en tres fenómenos sobrenaturales."]},
+  {c:5, tag:"Texto bíblico", t:"Lo que dice Apocalipsis 6", list:["Primer sello: caballo blanco; el jinete tiene un arco y recibe una corona (6:2).","Segundo: caballo bermejo; se le da quitar la paz de la tierra y una gran espada (6:4).","Tercero: caballo negro; el jinete tiene una balanza; un denario por una medida de trigo; no dañar el aceite ni el vino (6:5-6).","Cuarto: caballo amarillo; su jinete se llama Muerte y el Hades lo sigue; poder sobre la cuarta parte de la tierra (6:8).","Quinto: las almas de los muertos por la palabra de Dios están bajo el altar; reciben vestiduras blancas y deben esperar un poco más (6:9-11).","Sexto: además, caen las estrellas, el cielo se enrolla como un pergamino y todo monte e isla se mueve (6:13-14)."]},
+  {c:5, t:"Los tres fenómenos del sexto sello", list:["Un gran terremoto.","El sol se pondrá negro.","La luna se volverá roja como sangre."],
+   d:"Ante esto, el hombre decide esconderse en Él o esconderse de Él.",
+   v:[["Apocalipsis 6:16-17","","Los hombres piden a montes y peñas que caigan sobre ellos para esconderse de la ira del Cordero."]]},
+  {c:5, t:"4. Los sellados por Dios (Ap. 7:1-17)", d:"En medio del miedo y el terror, Dios muestra su soberanía y gracia a la humanidad.",
+   list:["A. Deteniendo los vientos, guerras y juicios por un momento."],
+   v:[["Apocalipsis 7:1-3","","Cuatro ángeles detienen los cuatro vientos para que no dañen la tierra hasta sellar a los siervos de Dios."]]},
+  {c:5, tag:"Texto bíblico", t:"Lo que dice Apocalipsis 7", list:["Cuatro ángeles detienen los cuatro vientos en los cuatro ángulos de la tierra (7:1).","Otro ángel, con el sello del Dios vivo, ordena no dañar la tierra hasta sellar en la frente a los siervos de Dios (7:2-3).","Son sellados 144.000 de todas las tribus de Israel, 12.000 por tribu (7:4-8).","Después, una gran multitud de toda nación, tribu, pueblo y lengua, con ropas blancas y palmas, está delante del trono (7:9).","Son los que salieron de la gran tribulación y lavaron sus ropas en la sangre del Cordero; Dios enjugará toda lágrima de sus ojos (7:14-17)."]}
+ ]
+}
+];
+
+/* ---------- QUIZ ---------- */
+const VERSE_TXT = "Escribe, pues, las cosas que has visto, y las que son, y las que han de suceder después de estas.";
+const VERSE_Q = {id:"verse119", type:"verse", c:1, s:"panorama", topic:"Versículo clave: Apocalipsis 1:19 (NBLA)", q:"Escribe de memoria Apocalipsis 1:19 en la versión NBLA.", e:"Este versículo es el bosquejo del libro: lo que has visto (cap. 1), lo que es (caps. 2–3) y lo que ha de suceder después de estas (caps. 4–22)."};
+
+const IGL=[
+ {n:"Éfeso", ref:"Ap. 2:1-7", c:2, sig:"Deseo ardiente",
+  aut:"El que tiene las siete estrellas en su mano y anda en medio de los siete candeleros: aquel que acompaña a su iglesia",
+  cond:"Trabajadora y paciente; no soporta a los malos, probó a los falsos apóstoles y aborrece las obras de los nicolaítas; pero dejó su primer amor",
+  exh:"Recordar de dónde ha caído, arrepentirse y volver a las primeras obras; si no, el Señor quitará su candelero",
+  prom:"Comer del árbol de la vida en el paraíso de Dios: volver a disfrutar del bienestar que se perdió en el Edén",
+  per:"Período apostólico", fec:"Pentecostés – 64 d.C."},
+ {n:"Esmirna", ref:"Ap. 2:8-11", c:3, sig:"Mirra (amargo)",
+  aut:"El primero y el último, el que estuvo muerto y vivió: el Eterno soberano que venció la muerte",
+  cond:"Paga un alto costo: sufre tribulación y pobreza, pero es rica por dentro; soporta la blasfemia de los que dicen ser judíos y no lo son. No recibe reprensión",
+  exh:"No temer lo que va a padecer (cárcel y tribulación de diez días) y ser fieles hasta la muerte para recibir la corona de la vida",
+  prom:"No sufrir daño de la segunda muerte: tener la compañía del Señor por siempre",
+  per:"Persecución y maldad, hasta Constantino", fec:"64 – 313 d.C."},
+ {n:"Pérgamo", ref:"Ap. 2:12-17", c:3, sig:"Matrimonio consumado",
+  aut:"El que tiene la espada aguda de dos filos: el que es justo y firme en su carácter",
+  cond:"Vive donde está el trono de Satanás; retuvo el nombre del Señor y no negó la fe, ni cuando mataron a Antipas; pero tolera a quienes siguen la doctrina de Balaam y la de los nicolaítas",
+  exh:"Arrepentirse y rechazar las falsas doctrinas, como la de Balaam; si no, el Señor peleará contra ellos con la espada de su boca",
+  prom:"Recibir el maná escondido y una piedrecita blanca con un nombre nuevo: reconocimiento y misterios invaluables de Dios",
+  per:"Corrupción en la Iglesia", fec:"313 – 606 d.C."},
+ {n:"Tiatira", ref:"Ap. 2:18-29", c:3, sig:"Ofrecimiento de víctimas",
+  aut:"El Hijo de Dios, con ojos como llama de fuego y pies como bronce bruñido: el juez soberano",
+  cond:"Sirve con amor, fe y paciencia, y sus últimas obras son más que las primeras; pero tolera a Jezabel, que se dice profetisa y enseña inmoralidad e idolatría: un liderazgo corrupto",
+  exh:"Les enseña las consecuencias de no arrepentirse (Jezabel y quienes la siguen sufrirán gran tribulación) y a los fieles les pide retener lo que tienen hasta que Él venga",
+  prom:"Recibir autoridad sobre las naciones y la estrella de la mañana: autoridad y sabiduría",
+  per:"Auge y supremacía del catolicismo", fec:"606 – 1517 d.C."},
+ {n:"Sardis", ref:"Ap. 3:1-6", c:3, sig:"Los que salieron",
+  aut:"El que tiene los siete espíritus de Dios y las siete estrellas: tiene la plenitud del Espíritu Santo y dirige su iglesia",
+  cond:"Tiene nombre de que vive, pero está muerta: muchos no han puesto en práctica la Palabra; aun así hay un remanente que no ha manchado sus vestiduras",
+  exh:"Velar, afirmar lo que queda, recordar lo que ha recibido y oído, ponerlo en práctica y arrepentirse; si no vela, el Señor vendrá como ladrón",
+  prom:"Ser vestido de blanco, no ser borrado del libro de la vida y ser confesado delante del Padre: su estadía en el cielo garantizada",
+  per:"Reforma protestante", fec:"1517 – 1750 d.C."},
+ {n:"Filadelfia", ref:"Ap. 3:7-13", c:3, sig:"Amor fraternal",
+  aut:"El Santo, el Verdadero, el que tiene la llave de David, que abre y nadie cierra: el único digno de dar entrada al cielo",
+  cond:"Tiene poca fuerza, pero guardó la Palabra y no negó el nombre del Señor: está dirigida y fundamentada en la Palabra, y tiene delante una puerta abierta. No recibe reprensión",
+  exh:"Tener paciencia y retener lo que tiene para que nadie tome su corona, porque el Señor viene pronto; Él la guardará de la hora de la prueba",
+  prom:"Ser columna en el templo de Dios, con el nombre de Dios y de la nueva Jerusalén: íntima comunión con Él",
+  per:"Énfasis misionero y evangelístico", fec:"1750 – 1900 d.C."},
+ {n:"Laodicea", ref:"Ap. 3:14-22", c:4, sig:"Juicio a las naciones",
+  aut:"El Amén, el testigo fiel y verdadero, el principio de la creación de Dios: el único infalible Autor de la creación",
+  cond:"No es fría ni caliente, sino tibia; dice ser rica y no necesitar nada, pero es pobre, miserable, ciega, desnuda y vacía. No recibe elogio",
+  exh:"Comprarle al Señor oro refinado, vestiduras blancas y colirio: arrepentirse y hacer tesoros en los cielos; el Señor está a la puerta y llama",
+  prom:"Sentarse con Cristo en su trono: reinar con Cristo",
+  per:"Apostasía de la Iglesia", fec:"1900 – segunda venida"}
+];
+const lc = s => s.charAt(0).toLowerCase()+s.slice(1);
+const GEN=[];
+(function(){
+ const rnd=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+ const ASP=[
+  ["aut","quién se presenta",g=>`En la carta a ${g.n}, ¿cómo se presenta el autor?`,g=>g.aut],
+  ["cond","la carta completa",g=>`¿Cómo es la carta a la iglesia de ${g.n}?`,g=>`<span class="fullc"><b>Se presenta:</b> ${lc(g.aut)}.<br><b>Lo que Jesús ve en ella:</b> ${lc(g.cond)}.<br><b>Exhortación:</b> ${lc(g.exh)}.<br><b>Promesa:</b> ${lc(g.prom)}.</span>`],
+  ["exh","exhortación",g=>`¿A qué exhorta el Señor a la iglesia de ${g.n}?`,g=>g.exh],
+  ["per","período que representa",g=>`¿Qué período de la historia de la Iglesia representa ${g.n}?`,g=>`${g.per} (${g.fec})`]
+ ];
+ const card=g=>`${g.n} (${g.ref}) · Significa «${g.sig}». Se presenta: ${lc(g.aut)}. Condición: ${lc(g.cond)}. Exhortación: ${lc(g.exh)}. Promesa: ${lc(g.prom)}. Período: ${lc(g.per)}, ${g.fec}.`;
+ IGL.forEach(g=>{
+  ASP.forEach(([k,lab,qf,af])=>{
+   const right=af(g), wrong=rnd(IGL.map(af).filter(x=>x!==right)).slice(0,3);
+   GEN.push({id:`g-${k}-${g.n}`, c:g.c, s:"s2", topic:`${g.n}: ${lab}`, q:qf(g), o:[right,...wrong], a:0, e:card(g)});
+  });
+  const ep=x=>`Exhortación: ${lc(x.exh)}. Promesa: ${lc(x.prom)}.`;
+  GEN.push({id:`g-ep-${g.n}`, c:g.c, s:"s2", topic:`${g.n}: exhortación y promesa`, q:`En la carta a ${g.n}, ¿cuál es la exhortación y cuál la promesa al vencedor?`, o:[ep(g),...rnd(IGL.filter(x=>x!==g)).slice(0,3).map(ep)], a:0, e:card(g)});
+  GEN.push({id:`g-card-${g.n}`, c:g.c, s:"s2", topic:`${g.n}: la carta completa`, q:`¿A qué iglesia corresponde esta carta?<span class="cardq"><b>Se presenta:</b> ${lc(g.aut)}.<br><b>Lo que Jesús ve en ella:</b> ${lc(g.cond)}.<br><b>Exhortación:</b> ${lc(g.exh)}.<br><b>Promesa:</b> ${lc(g.prom)}.</span>`, o:[g.n,...rnd(IGL.filter(x=>x!==g).map(x=>x.n)).slice(0,3)], a:0, e:card(g)});
+ });
+ /* Cuántas, cuáles y en qué orden */
+ const N=["primer","segundo","tercer","cuarto","quinto","sexto","séptimo"];
+ IGL.forEach((g,i)=>{
+  const pos=rnd([0,1,2,3,4,5,6].filter(x=>x!==i)).slice(0,3);
+  GEN.push({id:`g-pos-${g.n}`, c:2, s:"s2", topic:"Orden de las siete iglesias", q:`¿En qué lugar aparece la carta a ${g.n}?`, o:[`En ${N[i]} lugar`,...pos.map(x=>`En ${N[x]} lugar`)], a:0, e:"Orden: 1 Éfeso, 2 Esmirna, 3 Pérgamo, 4 Tiatira, 5 Sardis, 6 Filadelfia, 7 Laodicea."});
+  if(i<6) GEN.push({id:`g-next-${g.n}`, c:2, s:"s2", topic:"Orden de las siete iglesias", q:`¿Qué iglesia sigue después de ${g.n}?`, o:[IGL[i+1].n,...rnd(IGL.filter((x,k)=>k!==i+1&&k!==i).map(x=>x.n)).slice(0,3)], a:0, e:"Orden: Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia y Laodicea."});
+ });
+})();
+
+/* Preguntas interactivas: unir columnas (match), ordenar (order) y armar la carta (build) */
+const grid=(rows,ans)=>rows.map((r,i)=>[r,ans[i],ans.filter((_,j)=>j!==i)]);
+const B=(id,c,s,topic,q,slots,e)=>({id,type:"build",c,s,topic,q,slots,e});
+const PER=g=>`${g.per} (${g.fec})`;
+const SLOTS=[["Significado del nombre",g=>g.sig],["Se presenta (autor)",g=>g.aut],["Lo que Jesús ve en ella",g=>g.cond],["Exhortación",g=>g.exh],["Promesa al vencedor",g=>g.prom],["Período que representa",PER]];
+const SEALS=[
+ {n:"Primer sello", col:"Blanco", lleva:"Un arco y una corona", sig:"El anticristo, que viene con una paz aparente"},
+ {n:"Segundo sello", col:"Bermejo (rojo)", lleva:"Una gran espada para quitar la paz", sig:"La muerte que trae después de su falsa paz"},
+ {n:"Tercer sello", col:"Negro", lleva:"Una balanza", sig:"Sufrimiento por la escasez de comida"},
+ {n:"Cuarto sello", col:"Amarillo", lleva:"Se llama Muerte y el Hades le sigue", sig:"La muerte que traerán las guerras"}];
+const BUILD = [
+ ...IGL.map(g=>B(`b-${g.n}`, g.c, "s2", `Arma la carta a ${g.n}`, `Arma la carta a la iglesia de ${g.n}: escoge cada una de sus partes.`,
+   SLOTS.map(([lab,f])=>[lab,f(g),IGL.filter(h=>h!==g).map(f)]),
+   `${g.n} (${g.ref}) · Significa «${g.sig}». Se presenta: ${lc(g.aut)}. Lo que Jesús ve: ${lc(g.cond)}. Exhortación: ${lc(g.exh)}. Promesa: ${lc(g.prom)}. Período: ${lc(g.per)}, ${g.fec}.`)),
+ B("b-significados",3,"s2","Significado de los nombres de las siete iglesias","Escoge el significado del nombre de cada una de las siete iglesias.", grid(IGL.map((g,i)=>`${i+1}. ${g.n}`),IGL.map(g=>g.sig)), "Éfeso: deseo ardiente. Esmirna: mirra (amargo). Pérgamo: matrimonio consumado. Tiatira: ofrecimiento de víctimas. Sardis: los que salieron. Filadelfia: amor fraternal. Laodicea: juicio a las naciones."),
+ B("b-periodos",3,"s2","Los períodos de las siete iglesias","Escoge el período de la historia que representa cada iglesia.", grid(IGL.map((g,i)=>`${i+1}. ${g.n}`),IGL.map(PER)), "Apostólico, persecución, corrupción, catolicismo, reforma, misiones y apostasía."),
+ B("b-presentaciones",3,"s2","Cómo se presenta el Señor a cada iglesia","Escoge cómo se presenta el Señor en cada carta.", grid(IGL.map((g,i)=>`${i+1}. ${g.n}`),IGL.map(g=>g.aut)), "Cada carta inicia con una presentación del Señor distinta, según la necesidad de esa iglesia."),
+ B("b-promesas",3,"s2","Promesa al vencedor de cada iglesia","Escoge la promesa al vencedor de cada iglesia.", grid(IGL.map((g,i)=>`${i+1}. ${g.n}`),IGL.map(g=>g.prom)), "Cada carta termina con una promesa al que venciere."),
+ B("b-generalidades",1,"panorama","Generalidades del libro","Arma las generalidades del Apocalipsis.", [
+   ["Fecha aproximada","94 – 97 d.C.",["30 – 33 d.C.","64 – 68 d.C.","120 – 125 d.C."]],
+   ["Autor","El apóstol Juan",["El apóstol Pablo","El apóstol Pedro","Juan el Bautista"]],
+   ["Lugar donde se escribió","La isla de Patmos",["Roma","Jerusalén","Éfeso"]],
+   ["Lenguaje","Simbólico en su gran mayoría",["Literal en su totalidad","Poético, como los salmos","Narrativo, como los evangelios"]],
+   ["Destinatarios","Algunas iglesias de Asia Menor",["Los judíos de Jerusalén","La iglesia de Roma","Los gentiles de Grecia"]],
+   ["Género literario","Apocalíptico",["Epistolar","Histórico","Sapiencial"]]],
+   "Juan escribió en Patmos, hacia el 94 – 97 d.C., un libro apocalíptico de lenguaje simbólico para iglesias de Asia Menor."),
+ B("b-bosquejo",1,"panorama","Bosquejo del libro (Ap. 1:19)","Arma el bosquejo del libro: capítulos y contenido de cada parte.", [
+   ["Las cosas que has visto · capítulos","Capítulo 1",["Capítulos 2–3","Capítulos 4–22"]],
+   ["Las cosas que has visto · contenido","La visión de Cristo glorificado",["Las cartas a las siete iglesias","Los eventos que vendrán"]],
+   ["Las cosas que son · capítulos","Capítulos 2–3",["Capítulo 1","Capítulos 4–22"]],
+   ["Las cosas que son · contenido","Las cartas a las siete iglesias",["La visión de Cristo glorificado","Los eventos que vendrán"]],
+   ["Las cosas que han de suceder · capítulos","Capítulos 4–22",["Capítulo 1","Capítulos 2–3"]],
+   ["Las cosas que han de suceder · contenido","Los eventos que vendrán",["La visión de Cristo glorificado","Las cartas a las siete iglesias"]]],
+   "Ap. 1:19: lo que has visto (cap. 1), lo que es (caps. 2–3) y lo que ha de suceder después de estas (caps. 4–22)."),
+ B("b-diagrama",1,"panorama","Diagrama del libro","Arma el diagrama del libro.", [
+   ["Duración del período de tribulación","7 años",["3½ años","40 años","1.000 años"]],
+   ["La gran tribulación ocupa","Los últimos 3½ años",["Los primeros 3½ años","Los 7 años completos","Los 1.000 años"]],
+   ["Del séptimo sello salen","Las siete trompetas",["Las siete copas","Las siete cartas","Los siete candeleros"]],
+   ["En el cielo, durante la tribulación","El tribunal de Cristo y las bodas del Cordero",["El juicio del gran trono blanco","El milenio","La adoración de los 144.000"]],
+   ["Duración del milenio","1.000 años",["7 años","3½ años","Para siempre"]],
+   ["Satanás durante el milenio","Está en el abismo",["Reina en la tierra","Está en el cielo","Ya está en el lago de fuego"]],
+   ["Después del milenio","El juicio del gran trono blanco",["El rapto","La tribulación","Las bodas del Cordero"]]],
+   "Rapto → tribulación (7 años) → segunda venida → milenio → juicio del gran trono blanco → estado eterno."),
+ B("b-revelacion",1,"s1","El orden de la revelación","Completa la cadena de la revelación.", grid(["El Padre revela al…","El Hijo revela al…","El ángel revela a…","Juan lo escribe para…"],["Hijo","Ángel","Juan","La iglesia"]), "Padre → Hijo → ángel → Juan → iglesia."),
+ B("b-saludo",1,"s1","El saludo de la Trinidad","Escoge cómo aparece cada persona de la Trinidad en el saludo a las iglesias.", grid(["Dios Padre","Espíritu Santo","Jesucristo"],["El que es, el que era y el que ha de venir","Los siete espíritus que están delante de su trono","El testigo fiel, el primogénito de los muertos y el soberano de los reyes"]), "El saludo proviene de la Trinidad."),
+ B("b-ministerios",2,"s1","Los tres ministerios de Jesucristo","Arma la triple exaltación de Jesucristo.", grid(["Profeta","Sacerdote","Rey"],["El testigo fiel","El primogénito de los muertos","El soberano de los reyes de la tierra"]), "Profeta: testigo fiel. Sacerdote: primogénito de los muertos. Rey: soberano de los reyes."),
+ B("b-vision",2,"s1","La visión de Cristo glorificado","Arma lo que enseña la visión de Cristo glorificado.", [
+   ["Los siete candeleros representan","Las siete iglesias",["Los siete ángeles","Los siete espíritus","Siete profetas"]],
+   ["Las siete estrellas son","Los ángeles (mensajeros) de las siete iglesias",["Las siete iglesias","Los siete sellos","Siete apóstoles"]],
+   ["Los tres aspectos de la Iglesia que reflejan los candeleros","Pureza, alto costo y misión de ser luz",["Fe, esperanza y amor","Unidad, doctrina y oración","Historia, presente y futuro"]],
+   ["Jesucristo, como Dios, tiene facultad de","Juzgar",["Escribir la Ley","Nombrar apóstoles","Sellar el libro"]],
+   ["Juan escribe como","Testigo presencial de eventos escatológicos",["Historiador que recopila relatos","Poeta que imagina","Profeta que oyó de otros"]],
+   ["Pasaje que la clase relaciona con Juan como testigo","Juan 21:22",["Juan 3:16","Hechos 1:11","Mateo 24:36"]]],
+   "La visión introduce las cartas: Cristo glorificado camina entre los candeleros (las iglesias) y tiene las estrellas (sus ángeles)."),
+ B("b-trono",4,"s3","El trono de Dios","Arma lo que enseña la visión del trono de Dios.", [
+   ["La frase «sube acá» ilustra","El rapto de la Iglesia",["La ascensión de Jesús","La muerte de Juan","El milenio"]],
+   ["La puerta abierta en el cielo le permite a Juan","Conocer la revelación final",["Escapar de Patmos","Ver a las siete iglesias","Hablar con los profetas"]],
+   ["Los 24 ancianos representan","La Iglesia del Señor: judíos y gentiles",["24 ángeles","Los profetas del AT","Los 144.000"]],
+   ["Los cuatro seres vivientes son","Querubines: un orden elevado de ángeles",["Los cuatro evangelistas","Cuatro reinos de la tierra","Los cuatro jinetes"]],
+   ["Los seres vivientes ilustran","Lo que los evangelios dicen de Cristo",["Las cuatro estaciones","Los cuatro imperios","Los puntos cardinales"]],
+   ["En la adoración, seres vivientes y ancianos dan honra","Al único digno de recibirla",["A los ángeles","A Juan","A las siete iglesias"]]],
+   "Trono y 24 ancianos, cuatro seres vivientes y adoración al Soberano."),
+ B("b-seres",4,"s3","Los cuatro seres vivientes","Escoge el evangelio y lo que resalta cada ser viviente.",
+   [...grid(["El león · evangelio","El becerro · evangelio","El hombre · evangelio","El águila · evangelio"],["Mateo","Marcos","Lucas","Juan"]),
+    ...grid(["El león · resalta","El becerro · resalta","El hombre · resalta","El águila · resalta"],["Fuerza, ira y majestad","Obediencia","Su humanidad","Visión permanente"])],
+   "León: Mateo, fuerza, ira y majestad. Becerro: Marcos, obediencia. Hombre: Lucas, humanidad. Águila: Juan, visión permanente."),
+ B("b-rollo",5,"s3","El rollo y sus sellos","Arma el tema del rollo y sus sellos.", [
+   ["Quién es digno de desatar los sellos","El Cordero, el León de la tribu de Judá",["Uno de los 24 ancianos","El ángel fuerte","Juan"]],
+   ["Primera parte","Alguien digno de desatarlos",["La dignidad del Cordero","La adoración celestial al Cordero"]],
+   ["Segunda parte","La dignidad del Cordero",["Alguien digno de desatarlos","La adoración celestial al Cordero"]],
+   ["Tercera parte","La adoración celestial al Cordero",["Alguien digno de desatarlos","La dignidad del Cordero"]],
+   ["Cuántas cosas es digno de tomar el Cordero","Siete",["Tres","Cuatro","Doce"]],
+   ["Esas cosas son","Poder, riquezas, sabiduría, fortaleza, honra, gloria y alabanza",["Poder, venganza, sabiduría, fuerza, gloria, juicio y reino","Fe, esperanza, amor, paz, gozo, gloria y honra","Poder, riquezas, tronos, coronas, honra, gloria y juicio"]]],
+   "Solo el Cordero es digno; es digno de tomar poder, riquezas, sabiduría, fortaleza, honra, gloria y alabanza."),
+ ...SEALS.map((s,i)=>B(`b-sello${i+1}`,5,"s3",`Arma el ${s.n.toLowerCase()}`,`Arma el ${s.n.toLowerCase()}: color del caballo, lo que lleva el jinete y lo que representa.`, [
+   ["Color del caballo",s.col,SEALS.filter(x=>x!==s).map(x=>x.col)],
+   ["El jinete",s.lleva,SEALS.filter(x=>x!==s).map(x=>x.lleva)],
+   ["Lo que representa",s.sig,SEALS.filter(x=>x!==s).map(x=>x.sig)]], `${s.n}: caballo ${s.col.toLowerCase()}; ${lc(s.lleva)}; representa ${lc(s.sig)}.`)),
+ B("b-sellos-todos",5,"s3","Los seis sellos","Escoge lo que representa cada sello.", grid(["Primer sello","Segundo sello","Tercer sello","Cuarto sello","Quinto sello","Sexto sello"],[...SEALS.map(s=>s.sig),"Muchos serán salvos, pero perseguidos hasta morir","La ira del Cordero en tres fenómenos sobrenaturales"]), "Los cuatro primeros son caballos con jinetes; el quinto, los mártires; el sexto, la ira del Cordero."),
+ B("b-sexto-sellados",5,"s3","Sexto sello y sellados por Dios","Arma el sexto sello y los sellados por Dios.", [
+   ["Lo que se manifiesta en el sexto sello","La ira del Cordero",["La paz del anticristo","El hambre","La adoración celestial"]],
+   ["Los tres fenómenos","Gran terremoto, sol negro y luna roja como sangre",["Granizo, fuego y langostas","Diluvio, terremoto y eclipse","Estrellas, truenos y relámpagos"]],
+   ["Ante ellos, el hombre decide","Esconderse en Él o esconderse de Él",["Huir a otra ciudad","Construir refugios","Aliarse con el anticristo"]],
+   ["En los sellados, Dios detiene por un momento","Los vientos, guerras y juicios",["La adoración en el cielo","Las cartas a las iglesias","El reinado del Cordero"]],
+   ["En medio del miedo y el terror, Dios muestra","Su soberanía y gracia a la humanidad",["Solo su ira","Su ausencia","Su retiro de la historia"]]],
+   "Sexto sello: la ira del Cordero. Sellados: Dios detiene los juicios y muestra su soberanía y gracia.")
+];
+const INTER = [...BUILD,
+ {id:"m-periodos", type:"match", c:3, s:"s2", topic:"Las iglesias y los períodos que representan", q:"Une cada iglesia con el período de la historia que representa.", left:IGL.map(g=>g.n), right:IGL.map(g=>`${g.per} (${g.fec})`), e:"Éfeso: apostólico. Esmirna: persecución hasta Constantino. Pérgamo: corrupción. Tiatira: catolicismo. Sardis: reforma. Filadelfia: misiones. Laodicea: apostasía."},
+ {id:"m-significados", type:"match", c:3, s:"s2", topic:"Significado del nombre de cada iglesia", q:"Une cada iglesia con el significado de su nombre.", left:IGL.map(g=>g.n), right:IGL.map(g=>g.sig), e:"Los significados de los nombres se relacionan con la condición de cada iglesia y el período que representa."},
+ {id:"m-autores", type:"match", c:3, s:"s2", topic:"Cómo se presenta el Señor a cada iglesia", q:"Une cada iglesia con la forma en que se presenta el autor de la carta.", left:IGL.map(g=>g.n), right:IGL.map(g=>g.aut), e:"Cada carta empieza con una presentación del Señor que corresponde a la necesidad de esa iglesia."},
+ {id:"m-promesas", type:"match", c:3, s:"s2", topic:"Promesa al vencedor de cada iglesia", q:"Une cada iglesia con la promesa que recibe el vencedor.", left:IGL.map(g=>g.n), right:IGL.map(g=>g.prom), e:"Cada carta termina con una promesa al que venciere."},
+ {id:"m-condicion", type:"match", c:3, s:"s2", topic:"Condición de cada iglesia", q:"Une cada iglesia con la forma en que el Señor la describe.", left:IGL.map(g=>g.n), right:IGL.map(g=>g.cond), e:"La condición de cada iglesia es lo que el Señor ve en ella antes de exhortarla."},
+ {id:"m-exhort", type:"match", c:3, s:"s2", topic:"Exhortación a cada iglesia", q:"Une cada iglesia con la exhortación que recibe.", left:IGL.map(g=>g.n), right:IGL.map(g=>g.exh), e:"La exhortación o reprensión es la parte central de cada carta."},
+ {id:"m-capitulos", type:"match", c:1, s:"panorama", topic:"División del libro según Ap. 1:19", q:"Une cada parte del bosquejo con los capítulos que abarca.", left:["Las cosas que has visto","Las cosas que son","Las cosas que han de suceder después de estas"], right:["Capítulo 1","Capítulos 2–3","Capítulos 4–22"], e:"Capítulo 1: la visión de Cristo glorificado. Capítulos 2–3: las cartas. Capítulos 4–22: los eventos futuros."},
+ {id:"m-trinidad", type:"match", c:1, s:"s1", topic:"De quién proviene el saludo (Trinidad)", q:"Une cada persona de la Trinidad con la forma en que aparece en el saludo a las iglesias.", left:["Dios Padre","Espíritu Santo","Jesucristo"], right:["El que es, el que era y el que ha de venir","Los siete espíritus que están delante de su trono","El testigo fiel, el primogénito de los muertos y el soberano de los reyes"], e:"El saludo a las iglesias proviene de la Trinidad."},
+ {id:"m-ministerios", type:"match", c:2, s:"s1", topic:"Los tres ministerios de Jesucristo", q:"Une cada ministerio del Señor Jesús con su título.", left:["Profeta","Sacerdote","Rey"], right:["El testigo fiel","El primogénito de los muertos","El soberano de los reyes de la tierra"], e:"Es la triple exaltación de Cristo: profeta (testigo fiel), sacerdote (primogénito de los muertos) y rey (soberano de los reyes)."},
+ {id:"m-candeleros", type:"match", c:2, s:"s1", topic:"Candeleros y estrellas (Ap. 1:20)", q:"Une cada símbolo de la visión con su significado.", left:["Los siete candeleros","Las siete estrellas","El oro de los candeleros"], right:["Las siete iglesias","Los ángeles (mensajeros) de las siete iglesias","La pureza y el alto costo de la Iglesia"], e:"Los candeleros reflejan la pureza de la Iglesia, su alto costo y su misión de ser luz; las estrellas son los ángeles de las iglesias."},
+ {id:"m-seres-ev", type:"match", c:4, s:"s3", topic:"Los cuatro seres vivientes y los evangelios", q:"Une cada ser viviente con el evangelio que ilustra.", left:["El león","El becerro","El hombre","El águila"], right:["Mateo","Marcos","Lucas","Juan"], e:"Para profundizar: Mateo presenta a Cristo como Rey (león), Marcos como Siervo (becerro), Lucas como Hijo del Hombre (hombre) y Juan como Hijo de Dios (águila)."},
+ {id:"m-seres-cual", type:"match", c:4, s:"s3", topic:"Los cuatro seres vivientes: lo que resalta cada uno", q:"Une cada ser viviente con lo que resalta de Cristo.", left:["El león","El becerro","El hombre","El águila"], right:["Fuerza, ira y majestad","Obediencia","Su humanidad","Visión permanente"], e:"León: fuerza, ira y majestad (Mateo). Becerro: obediencia (Marcos). Hombre: humanidad (Lucas). Águila: visión permanente (Juan)."},
+ {id:"m-sellos", type:"match", c:5, s:"s3", topic:"Clasificar los seis sellos", q:"Une cada sello con lo que representa.", left:["Primer sello","Segundo sello","Tercer sello","Cuarto sello","Quinto sello","Sexto sello"], right:["El anticristo, que viene con una paz aparente","La muerte que trae después de su falsa paz","Sufrimiento por la escasez de comida","La muerte que traerán las guerras","Muchos serán salvos, pero perseguidos hasta morir","La ira del Cordero en tres fenómenos sobrenaturales"], e:"Los cuatro primeros sellos son caballos con jinetes que simbolizan muerte y destrucción; el quinto, los mártires; el sexto, la ira del Cordero."},
+ {id:"m-sellos-color", type:"match", c:5, s:"s3", tb:true, topic:"Los cuatro caballos (texto bíblico)", q:"Une cada sello con el color de su caballo.", left:["Primer sello","Segundo sello","Tercer sello","Cuarto sello"], right:["Caballo blanco","Caballo bermejo (rojo)","Caballo negro","Caballo amarillo"], e:"Blanco con arco y corona (6:2); bermejo con una gran espada (6:4); negro con una balanza (6:5); amarillo, cuyo jinete se llama Muerte (6:8)."},
+ {id:"m-sello-simbolo", type:"match", c:5, s:"s3", tb:true, topic:"Lo que lleva cada jinete (texto bíblico)", q:"Une cada jinete con lo que tiene o recibe.", left:["Jinete del caballo blanco","Jinete del caballo bermejo","Jinete del caballo negro","Jinete del caballo amarillo"], right:["Un arco y una corona","Una gran espada para quitar la paz","Una balanza","Se llama Muerte y el Hades le sigue"], e:"Apocalipsis 6:2, 6:4, 6:5 y 6:8."},
+ {id:"m-pasajes-4a7", type:"match", c:5, s:"s3", topic:"Pasajes de lo que ha de ser", q:"Une cada capítulo con su tema.", left:["Apocalipsis 4","Apocalipsis 5","Apocalipsis 6","Apocalipsis 7"], right:["El trono de Dios","El rollo y sus sellos","Los seis sellos","Los sellados por Dios"], e:"Los cuatro temas vistos de «las cosas que han de suceder»."},
+ {id:"o-cap1", type:"order", c:1, s:"s1", topic:"Los temas de «las cosas que has visto»", q:"Ordena los tres temas de «las cosas que has visto».", items:["Una bienaventuranza más de Jesucristo","Saludo a las iglesias","La visión de Cristo glorificado"], e:"Primero la bienaventuranza (la revelación), luego el saludo de la Trinidad y por último la visión de Cristo glorificado."},
+ {id:"o-trono", type:"order", c:4, s:"s3", topic:"Las partes del trono de Dios", q:"Ordena las tres partes del tema «El trono de Dios».", items:["La visión del trono y los 24 ancianos","La visión de los cuatro seres vivientes","La adoración al Soberano"], e:"A: el trono y los 24 ancianos. B: los cuatro seres vivientes. C: la adoración al Soberano."},
+ {id:"o-revelacion", type:"order", c:1, s:"s1", topic:"El orden de la revelación", q:"Ordena cómo se transmite la revelación, desde el origen hasta su destino.", items:["El Padre","El Hijo","El ángel","Juan","La iglesia"], e:"El Padre revela al Hijo; el Hijo al ángel; el ángel a Juan; Juan lo escribe para la iglesia."},
+ {id:"o-estructura", type:"order", c:3, s:"s2", topic:"Estructura de las cartas", q:"Ordena las partes que tiene cada carta a las iglesias.", items:["Presentación del que habla (el autor)","Reprensión o exhortación","Promesa al vencedor"], e:"Cada carta empieza con la presentación del Señor, sigue con reprensión o exhortación y termina con una promesa."},
+ {id:"o-iglesias", type:"order", c:3, s:"s2", topic:"La totalidad de las iglesias", q:"Ordena las siete iglesias en el orden en que aparecen sus cartas (Ap. 2–3).", items:IGL.map(g=>g.n), e:"Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia y Laodicea."},
+ {id:"o-rollo", type:"order", c:5, s:"s3", topic:"El rollo y sus sellos (Ap. 5)", q:"Ordena las tres partes del tema «El rollo y sus sellos».", items:["Alguien digno de desatar los sellos","La dignidad del Cordero","La adoración celestial al Cordero"], e:"Primero se busca a alguien digno, luego se proclama la dignidad del Cordero y al final viene la adoración celestial."},
+ {id:"o-diagrama", type:"order", c:1, s:"panorama", topic:"Diagrama del libro", q:"Ordena los eventos según el diagrama del libro.", items:["Cristo viene por sus santos (rapto)","Período de tribulación (7 años)","Cristo viene con sus santos","El milenio (1.000 años)","El juicio del gran trono blanco","El estado eterno"], e:"Época de la Iglesia → rapto → tribulación de 7 años → segunda venida → milenio → juicio del gran trono blanco → estado eterno."},
+ {id:"o-sellos-seq", type:"order", c:5, s:"s3", topic:"Secuencia de los sellos", q:"Ordena lo que muestran los seis sellos, del primero al sexto.", items:["Paz aparente del anticristo","Muerte tras la falsa paz","Escasez de comida","Muerte por las guerras","Salvos perseguidos hasta morir","Terremoto, sol negro y luna como sangre"], e:"Así avanzan los sellos de Apocalipsis 6."}
+];
+
+const QUIZ = [
+ /* Panorama */
+ {c:1, s:"panorama", topic:"Generalidades: fecha", q:"¿En qué fecha aproximada se escribió el Apocalipsis según la clase?", o:["94 – 97 d.C.","30 – 33 d.C.","64 – 68 d.C.","120 – 125 d.C."], a:0, e:"La clase ubicó la escritura aproximadamente entre el 94 y el 97 d.C."},
+ {c:1, s:"panorama", topic:"Generalidades: autor y lugar", q:"¿Quién escribió el Apocalipsis y dónde?", o:["El apóstol Juan, en la isla de Patmos","Pablo, en Roma","Pedro, en Babilonia","Juan el Bautista, en el desierto"], a:0, e:"Fue escrito por el apóstol Juan en la isla de Patmos."},
+ {c:1, s:"panorama", topic:"Generalidades: género y lenguaje", q:"¿Cuál es el género literario del libro y cómo está escrito en su mayoría?", o:["Apocalíptico, con lenguaje simbólico","Epistolar, con lenguaje literal","Histórico, con crónicas","Poético, con salmos"], a:0, e:"Es género apocalíptico y está escrito en su gran mayoría con lenguaje simbólico."},
+ {c:1, s:"panorama", topic:"Posturas teológicas", q:"¿Cuál de estas NO es una de las cuatro posturas teológicas vistas en clase?", o:["Racionalista","Preterista","Historicista","Futurista"], a:0, e:"Las cuatro posturas son: preterista, historicista, idealista o simbólica y futurista."},
+ {c:1, s:"panorama", topic:"Propósitos del libro", q:"¿Cuál de estos es uno de los propósitos del Apocalipsis según la clase?", o:["Traer aliento y consuelo a los hijos de Dios en medio de la persecución","Narrar la vida de Jesús","Dar leyes para el culto","Contar la historia de Israel"], a:0, e:"Los propósitos: aliento en la persecución, profecía de lo que viene, soberanía de Dios, consumación de su plan, llamado a la gracia y exponer su justicia y santidad."},
+ {c:1, s:"panorama", topic:"Las dispensaciones", q:"¿Desde cuándo y hasta cuándo va la dispensación de la Iglesia?", o:["Desde Pentecostés hasta el rapto","Desde la creación hasta el diluvio","Desde el rapto hasta la segunda venida","Desde Éxodo 20 hasta Hechos 2"], a:0, e:"La Iglesia va desde Pentecostés hasta el rapto; luego la gran tribulación, hasta la segunda venida."},
+ {c:1, s:"panorama", topic:"Diagrama del libro", q:"En el diagrama, ¿cuánto dura el período de tribulación?", o:["7 años","3½ años","40 años","1.000 años"], a:0, e:"Dura 7 años; la gran tribulación son los últimos 3½. Los 1.000 años son el milenio."},
+ {c:1, s:"panorama", topic:"Diagrama del libro", q:"Según el diagrama, ¿qué sucede en el cielo mientras en la tierra ocurre la tribulación?", o:["El tribunal de Cristo y las bodas del Cordero","El juicio del gran trono blanco","El milenio","La batalla final"], a:0, e:"En el cielo: el tribunal de Cristo y las bodas del Cordero."},
+ {c:1, s:"panorama", topic:"Bosquejo (Ap. 1:19)", q:"¿Qué versículo sirve de bosquejo para dividir el libro en tres partes?", o:["Apocalipsis 1:19","Apocalipsis 1:3","Apocalipsis 4:1","Apocalipsis 22:20"], a:0, e:"Apocalipsis 1:19: lo que has visto, lo que es y lo que ha de suceder después de estas."},
+ {c:1, s:"panorama", topic:"División de capítulos", q:"Los capítulos 4 al 22 corresponden a…", o:["Las cosas que han de suceder después de estas","Las cosas que has visto","Las cosas que son","Las cartas a las iglesias"], a:0, e:"Capítulo 1: lo que has visto. Capítulos 2–3: lo que es. Capítulos 4–22: lo que ha de suceder."},
+ {c:1, s:"panorama", topic:"División de capítulos", q:"«Las cosas que son» abarca…", o:["Los capítulos 2 y 3","El capítulo 1","Los capítulos 4 al 19","Los capítulos 20 al 22"], a:0, e:"Las cosas que son: las cartas a las siete iglesias, capítulos 2 y 3."},
+ {c:1, s:"panorama", topic:"División de capítulos", q:"«Las cosas que has visto» corresponde a…", o:["El capítulo 1: la visión de Cristo glorificado","Los capítulos 2 y 3","Los capítulos 4 y 5","El capítulo 22"], a:0, e:"El capítulo 1 es lo que Juan vio: la visión de Cristo glorificado."},
+ /* I */
+ {c:1, s:"s1", topic:"Significado de «Apocalipsis»", q:"¿Qué significa la palabra «Apocalipsis»?", o:["Revelación: correr el velo","Destrucción final","Juicio","Fin del mundo"], a:0, e:"Apocalipsis significa revelación, correr el velo."},
+ {c:1, s:"s1", topic:"El orden de la revelación", q:"En el orden de la revelación, ¿a quién se la revela el ángel?", o:["A Juan","A la iglesia","Al Hijo","A los profetas"], a:0, e:"Padre → Hijo → ángel → Juan → iglesia."},
+ {c:1, s:"s1", topic:"El orden de la revelación", q:"¿Quién revela al Hijo según el orden de la revelación?", o:["El Padre","El ángel","Juan","El Espíritu Santo"], a:0, e:"El Padre revela al Hijo; el Hijo al ángel; el ángel a Juan; Juan escribe para la iglesia."},
+ {c:1, s:"s1", topic:"El orden de la revelación", q:"¿Para quién escribe Juan la revelación?", o:["Para la iglesia","Para el emperador","Para los judíos de Jerusalén","Para los ángeles"], a:0, e:"Juan lo escribe para la iglesia, último eslabón de la cadena."},
+ {c:1, s:"s1", topic:"El saludo: la Trinidad", q:"¿De quién proviene el saludo a las siete iglesias?", o:["De la Trinidad: Padre, Espíritu Santo y Jesucristo","Solo de Juan","De los siete ángeles","De los 24 ancianos"], a:0, e:"Proviene del Padre (el que es, era y será), del Espíritu Santo (siete espíritus) y de Jesucristo."},
+ {c:1, s:"s1", topic:"El saludo: la Trinidad", q:"En el saludo, «el que es, el que era y el que ha de venir» se refiere a…", o:["Dios Padre","El Espíritu Santo","Juan","Los ángeles"], a:0, e:"Esa expresión identifica a Dios Padre."},
+ {c:1, s:"s1", topic:"El saludo: la Trinidad", q:"En el saludo, «los siete espíritus que están delante de su trono» representan a…", o:["El Espíritu Santo","Siete ángeles","Las siete iglesias","Siete profetas"], a:0, e:"Los siete espíritus representan al Espíritu Santo en su plenitud."},
+ {c:2, s:"s1", topic:"Los tres ministerios de Jesús", q:"¿Qué ministerio de Jesús corresponde a «el testigo fiel»?", o:["Profeta","Sacerdote","Rey","Juez"], a:0, e:"Profeta: testigo fiel. Sacerdote: primogénito de los muertos. Rey: soberano de los reyes."},
+ {c:2, s:"s1", topic:"Los tres ministerios de Jesús", q:"¿Qué ministerio de Jesús corresponde a «el primogénito de los muertos»?", o:["Sacerdote","Profeta","Rey","Pastor"], a:0, e:"El primogénito de los muertos se relaciona con su ministerio sacerdotal."},
+ {c:2, s:"s1", topic:"Los tres ministerios de Jesús", q:"¿Qué ministerio de Jesús corresponde a «el soberano de los reyes de la tierra»?", o:["Rey","Profeta","Sacerdote","Maestro"], a:0, e:"Como soberano de los reyes, Jesús es Rey."},
+ {c:2, s:"s1", topic:"La visión de Cristo glorificado", q:"¿En qué parte del bosquejo del libro está la visión de Cristo glorificado?", o:["Las cosas que has visto (capítulo 1)","Las cosas que son (capítulos 2–3)","Las cosas que han de suceder (capítulos 4–22)","En el diagrama del milenio"], a:0, e:"La visión de Cristo glorificado es parte de «las cosas que has visto»; ahí Juan es testigo presencial de eventos escatológicos y se introducen las cartas."},
+ {c:2, s:"s1", topic:"La visión de Cristo glorificado", q:"Según la clase, ¿cómo escribe Juan en la visión?", o:["Como testigo presencial de eventos escatológicos","Como historiador que recopila relatos","Como profeta que oyó de otros","Como poeta que imagina"], a:0, e:"Juan escribe siendo testigo presencial de eventos escatológicos."},
+ {c:2, s:"s1", topic:"Los candeleros", q:"¿Qué tres aspectos de la Iglesia reflejan los siete candeleros?", o:["Su pureza, su alto costo y su misión de ser luz","Fe, esperanza y amor","Su número, su unidad y su doctrina","Su historia, su presente y su futuro"], a:0, e:"Pureza, alto costo y misión de ser luz."},
+ {c:2, s:"s1", topic:"Los candeleros", q:"¿Cuál NO es uno de los aspectos de la Iglesia que reflejan los candeleros?", o:["Su riqueza material","Su pureza","Su alto costo","Su misión de ser luz"], a:0, e:"Los tres aspectos son pureza, alto costo y misión de ser luz."},
+ {c:2, s:"s1", topic:"Las siete estrellas", q:"¿Qué representan las siete estrellas que Cristo tiene en su mano?", o:["Los ángeles (mensajeros) de las siete iglesias","Las siete iglesias","Los siete espíritus","Siete profetas"], a:0, e:"Ap. 1:20: las estrellas son los ángeles de las iglesias y los candeleros son las iglesias."},
+ {c:2, s:"s1", topic:"Jesucristo juez", q:"Según la clase, ¿qué facultad tiene Jesucristo como Dios en la visión?", o:["La facultad de juzgar","La facultad de escribir la Ley","La facultad de nombrar apóstoles","Ninguna, solo observa"], a:0, e:"Jesucristo, como Dios, tiene facultad de juzgar."},
+ {c:2, s:"s1", topic:"Juan 21:22", q:"¿Qué pasaje se relaciona con que Juan fuera testigo de eventos de la venida del Señor?", o:["Juan 21:22","Juan 3:16","Hechos 1:11","Mateo 24:36"], a:0, e:"Juan 21:22: «Si Yo quiero que él se quede hasta que Yo venga, ¿a ti, qué? Tú, sígueme». Juan llegó a ver en visión la venida del Señor."},
+ {c:2, s:"s1", topic:"Juan 21:22", q:"En Juan 21:22, ¿a quién le habla Jesús acerca de Juan?", o:["A Pedro","A Tomás","A María","A Santiago"], a:0, e:"Jesús le responde a Pedro, que había preguntado qué pasaría con Juan."},
+ {c:2, s:"s1", topic:"Juan 21:22", q:"Completa Juan 21:22 (NBLA): «Si Yo quiero que él se quede hasta que Yo venga, ¿a ti, qué? …»", o:["Tú, sígueme","Tú, espera","Tú, escribe","Tú, predica"], a:0, e:"«…¿a ti, qué? Tú, sígueme»."},
+ /* II */
+ {c:2, s:"s2", topic:"Las cosas que son", q:"En las cartas, ¿qué revela Jesús acerca de las siete iglesias?", o:["Un conocimiento detallado de cada una","Solo sus nombres","Solo sus pecados","Solo su ubicación"], a:0, e:"Jesús revela un conocimiento detallado de las siete iglesias."},
+ {c:2, s:"s2", topic:"Las cosas que son", q:"¿Qué llamado hace Jesús con las cartas?", o:["Un llamado universal a todas las iglesias a ser fieles y permanecer firmes","Un llamado a construir templos","Un llamado a abandonar Asia","Un llamado solo a los líderes"], a:0, e:"Con ánimo, reprensión, exhortación y promesa, hace un llamado universal a ser fieles y firmes."},
+ {c:2, s:"s2", topic:"Las cosas que son", q:"¿Con qué tipo de palabras se dirige Jesús a las iglesias?", o:["Ánimo, reprensión, exhortación y promesa","Solo condenación","Solo alabanza","Instrucciones de liturgia"], a:0, e:"Ánimo, reprensión, exhortación y promesa."},
+ {c:3, s:"s2", topic:"Estructura de las cartas", q:"¿Cuál es la estructura de las cartas a las iglesias?", o:["Presentación, reprensión o exhortación, y promesa","Saludo, oración y despedida","Profecía, juicio y castigo","Historia, ley y canto"], a:0, e:"Presentación del autor → reprensión o exhortación → promesa al vencedor."},
+ {c:3, s:"s2", topic:"Estructura de las cartas", q:"¿Con qué termina cada carta a las iglesias?", o:["Con una promesa al vencedor","Con una maldición","Con una lista de nombres","Con un himno"], a:0, e:"Cada carta cierra con una promesa al que venciere."},
+ {c:2, s:"s2", topic:"Ubicación de las iglesias", q:"¿En qué región estaban las siete iglesias?", o:["Asia Menor","Macedonia","Acaya","Judea"], a:0, e:"Estaban en Asia Menor, al oriente del Mediterráneo."},
+ {c:2, s:"s2", topic:"Cuántas eran las iglesias", q:"¿Cuántas iglesias reciben carta en Apocalipsis?", o:["Siete","Doce","Cinco","Diez"], a:0, e:"Son siete: Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia y Laodicea."},
+ {c:2, s:"s2", topic:"Cuáles eran las iglesias", q:"¿Cuál grupo contiene SOLO iglesias de Apocalipsis?", o:["Éfeso, Tiatira y Filadelfia","Éfeso, Corinto y Sardis","Roma, Pérgamo y Laodicea","Colosas, Esmirna y Tiatira"], a:0, e:"Corinto, Roma y Colosas tuvieron iglesias, pero no reciben carta en Apocalipsis."},
+ {c:2, s:"s2", topic:"Orden de las siete iglesias", q:"¿Cuál es la primera y cuál la última de las siete iglesias?", o:["Éfeso y Laodicea","Esmirna y Filadelfia","Pérgamo y Sardis","Laodicea y Éfeso"], a:0, e:"Empieza con Éfeso y termina con Laodicea."},
+ {c:2, s:"s2", topic:"Orden de las siete iglesias", q:"¿Cuál es el orden correcto de las siete iglesias?", o:["Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia, Laodicea","Éfeso, Pérgamo, Esmirna, Sardis, Tiatira, Laodicea, Filadelfia","Esmirna, Éfeso, Tiatira, Pérgamo, Filadelfia, Sardis, Laodicea","Éfeso, Esmirna, Tiatira, Pérgamo, Sardis, Laodicea, Filadelfia"], a:0, e:"Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia y Laodicea."},
+ {c:2, s:"s2", topic:"Cuáles eran las iglesias", q:"¿En qué capítulos de Apocalipsis están las cartas a las siete iglesias?", o:["Capítulos 2 y 3","Capítulo 1","Capítulos 4 y 5","Capítulos 21 y 22"], a:0, e:"Las cartas son «las cosas que son», capítulos 2 y 3: cuatro en el cap. 2 (Éfeso a Tiatira) y tres en el cap. 3 (Sardis a Laodicea)."},
+ {c:2, s:"s2", topic:"La totalidad de las iglesias", q:"¿Cuál NO es una de las siete iglesias de Apocalipsis?", o:["Colosas","Pérgamo","Tiatira","Sardis"], a:0, e:"Las siete: Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia y Laodicea. Colosas era vecina de Laodicea, pero no recibe carta."},
+ {c:6, s:"s2", topic:"La diosa de Éfeso", q:"¿Qué diosa era famosa en Éfeso?", o:["Artemisa (la «Diana de los efesios»)","Atenea","Afrodita","Isis"], a:0, e:"Éfeso era el centro del culto a Artemisa, la Diana de los efesios (Hechos 19:28)."},
+ {c:6, s:"s2", topic:"Esmirna y Constantino", q:"El período de persecución que representa Esmirna (64 – 313 d.C.) llega hasta…", o:["El emperador Constantino","Martín Lutero","El papa Gregorio","Carlomagno"], a:0, e:"La persecución termina con Constantino (Edicto de Milán, 313 d.C.)."},
+ {c:6, s:"s2", topic:"Pérgamo y la doctrina de Balaam", q:"¿Qué falsa doctrina se menciona en la carta a Pérgamo?", o:["La doctrina de Balaam","La doctrina de Jezabel","La doctrina de los fariseos","La doctrina de Coré"], a:0, e:"En Pérgamo había quienes retenían la doctrina de Balaam (Ap. 2:14); por eso se les exhorta a rechazar las falsas doctrinas. Jezabel es de Tiatira."},
+ {c:4, s:"s2", topic:"Laodicea: período", q:"¿Qué período representa Laodicea según la clase?", o:["La apostasía de la Iglesia, desde 1900 hasta la segunda venida","La reforma protestante","La persecución romana","El período apostólico"], a:0, e:"Laodicea: apostasía, desde 1900 hasta la segunda venida."},
+ /* III */
+ {c:4, s:"s3", topic:"El trono de Dios", q:"Al inicio de la visión del trono, Juan oye «sube acá». Según la clase, ¿qué ilustra esa frase?", o:["El rapto de la Iglesia","La ascensión de Jesús","La muerte de Juan","El milenio"], a:0, e:"«Sube acá» ilustra el rapto de la Iglesia."},
+ {c:4, s:"s3", topic:"El trono de Dios", q:"¿Qué le permite a Juan la puerta abierta en el cielo?", o:["Conocer la revelación final","Escapar de Patmos","Ver a las siete iglesias","Hablar con los profetas"], a:0, e:"La puerta abierta le permite a Juan conocer la revelación final."},
+ {c:4, s:"s3", topic:"Los 24 ancianos", q:"¿A quién representan los 24 ancianos según la clase?", o:["A la Iglesia del Señor, conformada por judíos y gentiles","A 24 ángeles","Solo a los 12 apóstoles","A los profetas del AT"], a:0, e:"Representan la Iglesia, formada por judíos y gentiles (para profundizar: 12 tribus + 12 apóstoles)."},
+ {c:4, s:"s3", topic:"Los 24 ancianos", q:"Si los ancianos representan a la Iglesia ya en el cielo en Ap. 4, ¿qué refuerza eso según la postura de la clase?", o:["Que la Iglesia es arrebatada antes de la tribulación","Que la Iglesia pasa la tribulación en la tierra","Que no hay tribulación","Que los ancianos son ángeles"], a:0, e:"La clase une «sube acá» (rapto) con los 24 ancianos en el cielo antes de que se abran los sellos."},
+ {c:4, s:"s3", topic:"Los cuatro seres vivientes", q:"¿Qué son los cuatro seres vivientes?", o:["Seres angelicales (querubines), un orden elevado de ángeles","Los cuatro evangelistas","Cuatro reinos de la tierra","Los cuatro jinetes"], a:0, e:"Son seres angelicales, querubines, un orden elevado de ángeles."},
+ {c:4, s:"s3", topic:"Los cuatro seres vivientes", q:"¿Qué ilustran los cuatro seres vivientes?", o:["Lo que los evangelios dicen de Cristo","Las cuatro estaciones","Los cuatro imperios","Los cuatro puntos cardinales"], a:0, e:"Ilustran lo que los evangelios dicen de Cristo."},
+ {c:4, s:"s3", topic:"El león", q:"¿Qué resalta el león y con qué evangelio se relaciona?", o:["Fuerza, ira y majestad; Mateo","Obediencia; Marcos","Humanidad; Lucas","Visión permanente; Juan"], a:0, e:"El león: fuerza, ira y majestad (Mateo, que presenta a Cristo como Rey)."},
+ {c:4, s:"s3", topic:"El becerro", q:"¿Qué resalta el becerro y con qué evangelio se relaciona?", o:["Obediencia; Marcos","Fuerza; Mateo","Humanidad; Lucas","Visión; Juan"], a:0, e:"El becerro: obediencia (Marcos, que presenta a Cristo como Siervo)."},
+ {c:4, s:"s3", topic:"El hombre", q:"¿Qué resalta el ser viviente con rostro de hombre?", o:["La humanidad de Cristo (Lucas)","La majestad de Cristo (Mateo)","La obediencia de Cristo (Marcos)","La visión de Cristo (Juan)"], a:0, e:"El hombre: su humanidad (Lucas, que presenta a Cristo como Hijo del Hombre)."},
+ {c:4, s:"s3", topic:"El águila", q:"¿Qué resalta el águila y con qué evangelio se relaciona?", o:["Visión permanente; Juan","Fuerza; Mateo","Obediencia; Marcos","Humanidad; Lucas"], a:0, e:"El águila: visión permanente (Juan, que presenta a Cristo como Hijo de Dios)."},
+ {c:5, s:"s3", topic:"La adoración al Soberano", q:"En la adoración al Soberano, ¿quiénes dan honra, gloria y reconocimiento al único digno?", o:["Los seres vivientes y los 24 ancianos","Las siete iglesias","Los cuatro jinetes","Los 144.000"], a:0, e:"Los seres vivientes y los 24 ancianos adoran al Soberano."},
+ {c:5, s:"s3", topic:"El rollo: el que es digno", q:"¿Quién es digno de tomar el rollo y desatar sus sellos?", o:["El Cordero, el León de la tribu de Judá","Uno de los 24 ancianos","El ángel fuerte","Juan"], a:0, e:"Solo el Cordero, el León de la tribu de Judá, es digno de desatar los sellos."},
+ {c:5, s:"s3", topic:"El rollo y sus sellos", q:"En el capítulo 5, después de buscar a alguien digno de desatar los sellos, ¿qué se proclama antes de la adoración celestial?", o:["La dignidad del Cordero","La caída de Babilonia","La apertura del séptimo sello","El sellamiento de los 144.000"], a:0, e:"Apocalipsis 5 tiene tres partes: alguien digno de desatar los sellos, la dignidad del Cordero y la adoración celestial al Cordero."},
+ {c:5, s:"s3", topic:"Las siete cosas del Cordero", q:"¿Cuántas cosas es digno de tomar el Cordero según la clase?", o:["Siete","Tres","Cuatro","Doce"], a:0, e:"Poder, riquezas, sabiduría, fortaleza, honra, gloria y alabanza."},
+ {c:5, s:"s3", topic:"Las siete cosas del Cordero", q:"¿Cuál NO está entre las siete cosas que el Cordero es digno de tomar?", o:["Venganza","Riquezas","Sabiduría","Alabanza"], a:0, e:"Las siete: poder, riquezas, sabiduría, fortaleza, honra, gloria y alabanza."},
+ {c:5, s:"s3", topic:"Los primeros sellos", q:"¿Qué describen los primeros cuatro sellos?", o:["Cuatro caballos con jinetes que simbolizan muerte y destrucción","Cuatro ángeles que alaban","Cuatro iglesias fieles","Cuatro profetas"], a:0, e:"Los primeros sellos son cuatro caballos con jinetes: muerte y destrucción en la tierra."},
+ {c:5, s:"s3", topic:"Primer sello", q:"¿De quién habla el primer sello?", o:["Del anticristo, con una paz aparente","De Cristo victorioso","Del falso profeta","De Juan"], a:0, e:"Primer sello (6:1-2): el anticristo, con paz aparente."},
+ {c:5, s:"s3", topic:"Segundo sello", q:"¿Qué simboliza el segundo sello?", o:["La muerte que trae el anticristo luego de su falsa paz","La escasez de comida","Los mártires","Un terremoto"], a:0, e:"Segundo sello (6:3-4): muerte después de la falsa paz."},
+ {c:5, s:"s3", topic:"Tercer sello", q:"¿Qué ilustra el tercer sello?", o:["Sufrimiento por escasez de comida","Guerras","Persecución de los santos","Un terremoto"], a:0, e:"Tercer sello (6:5-6; Lam. 4:8-9): hambre por escasez de comida."},
+ {c:5, s:"s3", topic:"Cuarto sello", q:"¿De qué habla el cuarto sello?", o:["De la muerte que traerán las guerras","De la paz aparente","De la salvación de muchos","De la ira del Cordero"], a:0, e:"Cuarto sello (6:7-8): muerte por las guerras."},
+ {c:5, s:"s3", topic:"Quinto sello", q:"¿Qué enseña el quinto sello?", o:["Muchos serán salvos, pero perseguidos hasta morir","Nadie será salvo","La Iglesia será arrebatada","El anticristo será vencido"], a:0, e:"Quinto sello (6:9-11): salvos, pero perseguidos hasta la muerte."},
+ {c:5, s:"s3", topic:"Sexto sello", q:"¿Qué se manifiesta en el sexto sello?", o:["La ira del Cordero en tres fenómenos sobrenaturales","La paz del anticristo","El hambre","El sellamiento de los 144.000"], a:0, e:"Sexto sello (6:12-17): la ira del Cordero."},
+ {c:5, s:"s3", topic:"Fenómenos del sexto sello", q:"¿Cuál NO es uno de los tres fenómenos del sexto sello?", o:["Granizo mezclado con fuego","Un gran terremoto","El sol se pondrá negro","La luna se volverá roja como sangre"], a:0, e:"Terremoto, sol negro y luna como sangre."},
+ {c:5, s:"s3", topic:"Fenómenos del sexto sello", q:"Ante los fenómenos del sexto sello, ¿qué decisión enfrenta el hombre?", o:["Esconderse en Él o esconderse de Él","Huir a otra ciudad","Construir refugios","Aliarse con el anticristo"], a:0, e:"El hombre decide esconderse en Él (refugio) o esconderse de Él (6:16)."},
+ {c:5, s:"s3", topic:"Los sellados por Dios", q:"En Apocalipsis 7, en medio del miedo y el terror, ¿qué muestra Dios?", o:["Su soberanía y gracia a la humanidad","Solo su ira","Que se olvidó de la tierra","Su retiro de la historia"], a:0, e:"Dios muestra su soberanía y gracia."},
+ {c:5, s:"s3", topic:"Los sellados por Dios", q:"En el tema de los sellados por Dios, ¿qué detiene Dios por un momento?", o:["Los vientos, las guerras y los juicios","La adoración en el cielo","La apertura de las cartas a las iglesias","El reinado del Cordero"], a:0, e:"Detiene los vientos, guerras y juicios mientras se sella a sus siervos."}
+];
+
+/* Preguntas sobre los versículos y pasajes vistos en clase (sin Biblia) */
+const BIBLE = [
+ {c:1, s:"panorama", topic:"Apocalipsis 1:19 (NBLA)", q:"Completa Apocalipsis 1:19 (NBLA): «Escribe, pues, las cosas que has visto, y las que son, y …»", o:["las que han de suceder después de estas","las que fueron antes de estas","las que oíste del ángel","las que están en el libro sellado"], a:0, e:"«…y las que han de suceder después de estas»: caps. 4–22."},
+ {c:1, s:"panorama", topic:"Apocalipsis 1:19 (NBLA)", q:"En Apocalipsis 1:19, ¿qué se le ordena a Juan?", o:["Escribir lo que ha visto, lo que es y lo que ha de suceder","Sellar la profecía","Callar lo que vio hasta el fin","Predicar a las naciones"], a:0, e:"«Escribe, pues…»: esa orden da el bosquejo del libro."},
+ {c:1, s:"s1", topic:"Saludo: Apocalipsis 1:4 (NBLA)", q:"En el saludo de Apocalipsis 1:4, ¿a quiénes escribe Juan?", o:["A las siete iglesias que están en Asia","A los doce apóstoles","A la iglesia de Jerusalén","A todas las naciones"], a:0, e:"«Juan, a las siete iglesias que están en Asia: Gracia y paz a ustedes…»."},
+ {c:1, s:"s1", topic:"Saludo: Apocalipsis 1:4 (NBLA)", q:"Completa Apocalipsis 1:4 (NBLA): «Gracia y paz a ustedes, de parte de Aquel que es y que era y …»", o:["que ha de venir","que vive para siempre","que todo lo puede","que está en los cielos"], a:0, e:"«…que es y que era y que ha de venir»: así se presenta a Dios Padre en el saludo."},
+ {c:1, s:"s1", topic:"Saludo: Apocalipsis 1:4 (NBLA)", q:"Según Apocalipsis 1:4, ¿dónde están los siete Espíritus?", o:["Delante de Su trono","En las siete iglesias","En la mano derecha de Cristo","Sobre la tierra"], a:0, e:"«…los siete Espíritus que están delante de Su trono»: el Espíritu Santo."},
+ {c:1, s:"s1", topic:"Saludo: Apocalipsis 1:5 (NBLA)", q:"Completa Apocalipsis 1:5 (NBLA): «Jesucristo, el testigo fiel, el primogénito de los muertos y …»", o:["el soberano de los reyes de la tierra","el Cordero de Dios","el Hijo del Hombre","el Príncipe de paz"], a:0, e:"Los tres títulos corresponden a profeta, sacerdote y rey."},
+ {c:2, s:"s1", topic:"Juan 21:22 (NBLA)", q:"En Juan 21:22, ¿hasta cuándo dice Jesús que Juan podría quedarse, si Él lo quisiera?", o:["Hasta que Él venga","Hasta el fin de su vida","Hasta la destrucción del templo","Hasta Pentecostés"], a:0, e:"«Si Yo quiero que él se quede hasta que Yo venga, ¿a ti, qué? Tú, sígueme». Juan llegó a ver en visión los eventos de la venida del Señor."},
+ {c:5, s:"s3", topic:"Tercer sello y Lamentaciones 4:8-9", q:"¿Con qué libro del Antiguo Testamento relacionó la clase el tercer sello (el hambre)?", o:["Lamentaciones","Isaías","Daniel","Génesis"], a:0, e:"El tercer sello (6:5-6) se relaciona con Lamentaciones 4:8-9: el sufrimiento por la escasez de comida."},
+ {c:6, s:"s2", topic:"La diosa de Éfeso", q:"¿Cómo llamaban los efesios a su diosa?", o:["Diana (Artemisa) de los efesios","Atenea de los griegos","La reina del cielo","Baal"], a:0, e:"En Éfeso estaba el templo de Artemisa, la «Diana de los efesios»."},
+ {c:4, s:"s3", topic:"Pasajes de lo que ha de ser", q:"¿En qué capítulo está la visión del trono de Dios con los 24 ancianos y los seres vivientes?", o:["Capítulo 4","Capítulo 5","Capítulo 6","Capítulo 7"], a:0, e:"Cap. 4: el trono. Cap. 5: el rollo. Cap. 6: los seis sellos. Cap. 7: los sellados."},
+ {c:5, s:"s3", topic:"Pasajes de lo que ha de ser", q:"¿En qué capítulo están los sellados por Dios?", o:["Capítulo 7","Capítulo 4","Capítulo 5","Capítulo 6"], a:0, e:"Apocalipsis 7:1-17: los sellados por Dios."}
+];
+
+/* ---------- PREGUNTAS DE VERSÍCULOS, CAPÍTULOS, DIAGRAMA Y DISPENSACIONES ---------- */
+const VREF=[
+ ["1:1-3","Una bienaventuranza más de Jesucristo: la revelación"],
+ ["1:3","Bienaventurado el que lee, oye y guarda la profecía, porque el tiempo está cerca"],
+ ["1:4-8","El saludo a las iglesias de parte de la Trinidad"],
+ ["1:5","Los títulos de Jesucristo: testigo fiel, primogénito de los muertos y soberano de los reyes"],
+ ["1:8","El Señor se presenta como el Alfa y la Omega"],
+ ["1:9","Juan está en la isla de Patmos por causa de la palabra de Dios"],
+ ["1:9-20","La visión de Cristo glorificado"],
+ ["1:19","La orden de escribir: el bosquejo del libro"],
+ ["1:20","El misterio de las siete estrellas y los siete candeleros"],
+ ["2:1-7","La carta a la iglesia de Éfeso"],
+ ["2:4","Éfeso dejó su primer amor"],
+ ["2:7","Promesa a Éfeso: comer del árbol de la vida en el paraíso de Dios"],
+ ["2:8-11","La carta a la iglesia de Esmirna"],
+ ["2:10","Sé fiel hasta la muerte y recibirás la corona de la vida"],
+ ["2:11","El vencedor no sufrirá daño de la segunda muerte"],
+ ["2:12-17","La carta a la iglesia de Pérgamo"],
+ ["2:13","Pérgamo vive donde está el trono de Satanás; Antipas, testigo fiel"],
+ ["2:14","La doctrina de Balaam"],
+ ["2:17","El maná escondido y la piedrecita blanca con un nombre nuevo"],
+ ["2:18-29","La carta a la iglesia de Tiatira"],
+ ["2:20","Tiatira tolera a Jezabel, que se dice profetisa"],
+ ["2:26","El vencedor recibirá autoridad sobre las naciones"],
+ ["3:1-6","La carta a la iglesia de Sardis"],
+ ["3:1","«Tienes nombre de que vives, y estás muerto»"],
+ ["3:5","Vestiduras blancas y no ser borrado del libro de la vida"],
+ ["3:7-13","La carta a la iglesia de Filadelfia"],
+ ["3:8","Una puerta abierta que nadie puede cerrar"],
+ ["3:12","El vencedor será columna en el templo de Dios"],
+ ["3:14-22","La carta a la iglesia de Laodicea"],
+ ["3:16","Laodicea es tibia: ni fría ni caliente"],
+ ["3:20","«Yo estoy a la puerta y llamo»"],
+ ["3:21","El vencedor se sentará con Cristo en su trono"],
+ ["4:1","«Sube acá» y la puerta abierta en el cielo"],
+ ["4:1-5","La visión del trono y los 24 ancianos"],
+ ["4:4","Los 24 ancianos con ropas blancas y coronas de oro"],
+ ["4:6-8","La visión de los cuatro seres vivientes"],
+ ["4:8","Los seres vivientes con seis alas dicen: «Santo, santo, santo»"],
+ ["4:9-11","La adoración al Soberano"],
+ ["5:1-7","Alguien digno de desatar los sellos"],
+ ["5:5","El León de la tribu de Judá ha vencido"],
+ ["5:6","El Cordero como inmolado, con siete cuernos y siete ojos"],
+ ["5:8-10","La dignidad del Cordero"],
+ ["5:11-14","La adoración celestial al Cordero"],
+ ["5:12","Las siete cosas que el Cordero es digno de tomar"],
+ ["6:1-2","Primer sello: el anticristo con una paz aparente"],
+ ["6:3-4","Segundo sello: la muerte después de la falsa paz"],
+ ["6:5-6","Tercer sello: la escasez de comida"],
+ ["6:7-8","Cuarto sello: la muerte por las guerras"],
+ ["6:9-11","Quinto sello: salvos, pero perseguidos hasta morir"],
+ ["6:12-17","Sexto sello: la ira del Cordero"],
+ ["6:12","El gran terremoto, el sol negro y la luna como sangre"],
+ ["6:16","Los hombres piden esconderse de la ira del Cordero"],
+ ["7:1-3","Cuatro ángeles detienen los vientos hasta sellar a los siervos de Dios"],
+ ["7:4","Los 144.000 sellados de las tribus de Israel"],
+ ["7:9","La gran multitud con ropas blancas y palmas"],
+ ["7:1-17","Los sellados por Dios"]
+];
+const VQ=[];
+(function(){
+ const rnd=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+ const P=r=>{const [ch,vs]=r.split(":");const [a,b]=vs.split("-").map(Number);return {ch:+ch,a,b:b||a,range:!!b};};
+ const ov=(x,y)=>{const p=P(x),q=P(y);return p.ch===q.ch && p.a<=q.b && q.a<=p.b;};
+ const sec=ch=>ch===1?"s1":ch<=3?"s2":"s3", cls=ch=>ch===1?1:ch===2?2:ch===3?3:ch===4?4:5;
+ VREF.forEach(([r,top])=>{
+  const p=P(r);
+  const pool=VREF.filter(([r2])=>!ov(r,r2));
+  const near=x=>rnd(pool.filter(([r2])=>P(r2).ch===p.ch)).concat(rnd(pool.filter(([r2])=>Math.abs(P(r2).ch-p.ch)===1))).concat(rnd(pool));
+  const pickU=(arr,f)=>{const out=[];arr.forEach(x=>{const v=f(x);if(!out.includes(v)&&out.length<3)out.push(v);});return out;};
+  const qf = p.range ? `Apocalipsis ${r}: ¿qué tema abarca este pasaje?` : `Del capítulo ${p.ch} de Apocalipsis, el versículo ${p.a}: ¿de qué habla?`;
+  VQ.push({id:`v-f-${r}`, c:cls(p.ch), s:sec(p.ch), topic:`Versículos: Apocalipsis ${r}`, q:qf, o:[top,...pickU(near(),x=>x[1])], a:0, e:`Apocalipsis ${r}: ${lc(top)}.`});
+  VQ.push({id:`v-r-${r}`, c:cls(p.ch), s:sec(p.ch), topic:`Versículos: Apocalipsis ${r}`, q:`¿En qué ${p.range?"pasaje":"versículo"} de Apocalipsis está esto?<span class="cardq">${top}</span>`, o:[`Apocalipsis ${r}`,...pickU(near().filter(x=>P(x[0]).range===p.range),x=>`Apocalipsis ${x[0]}`)], a:0, e:`Está en Apocalipsis ${r}.`});
+ });
+ VQ.forEach(q=>{ while(q.o.length<4){ const x=`Apocalipsis ${VREF[Math.floor(Math.random()*VREF.length)][0]}`; if(!q.o.includes(x) && q.o[0].startsWith("Apocalipsis")) q.o.push(x); else if(!q.o[0].startsWith("Apocalipsis")){ const y=VREF[Math.floor(Math.random()*VREF.length)][1]; if(!q.o.includes(y)) q.o.push(y);} } });
+})();
+
+const CAPS=[["Capítulo 1","Las cosas que has visto: bienaventuranza, saludo y visión de Cristo glorificado"],["Capítulo 2","Cartas a Éfeso, Esmirna, Pérgamo y Tiatira"],["Capítulo 3","Cartas a Sardis, Filadelfia y Laodicea"],["Capítulo 4","El trono de Dios: 24 ancianos, seres vivientes y adoración"],["Capítulo 5","El rollo y sus sellos: el Cordero es digno"],["Capítulo 6","Los seis sellos"],["Capítulo 7","Los sellados por Dios"]];
+const DISP=[["Inocencia","Génesis 1–3"],["Conciencia","Génesis 3–8"],["Gobierno humano","Génesis 9–11"],["Promesa","Génesis 12 – Éxodo 19"],["Ley","Éxodo 20 – Hechos 2"],["Iglesia","Desde Pentecostés hasta el rapto"],["La gran tribulación","Desde el rapto hasta la segunda venida de Jesucristo"],["Reino milenial y estado eterno","Después de la segunda venida"]];
+const DIAG=[["La época actual de la Iglesia (las siete cartas)","Capítulos 1 a 3"],["El período de tribulación (sellos, trompetas y copas)","Capítulos 4 a 19"],["El milenio, el juicio del gran trono blanco y el estado eterno","Capítulos 20 a 22"]];
+(function(){
+ const rnd=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+ CAPS.forEach(([c,t],i)=>{
+  VQ.push({id:`cap-f-${i}`, c:i<1?1:i<3?2:i<4?4:5, s:i<1?"s1":i<3?"s2":"s3", topic:"Temas de los capítulos", q:`¿De qué trata el ${c.toLowerCase()} de Apocalipsis?`, o:[t,...rnd(CAPS.filter(x=>x[1]!==t).map(x=>x[1])).slice(0,3)], a:0, e:CAPS.map(x=>`${x[0]}: ${lc(x[1])}`).join(". ")+"."});
+  VQ.push({id:`cap-r-${i}`, c:i<1?1:i<3?2:i<4?4:5, s:i<1?"s1":i<3?"s2":"s3", topic:"Temas de los capítulos", q:`¿En qué capítulo de Apocalipsis está esto?<span class="cardq">${t}</span>`, o:[c,...rnd(CAPS.filter(x=>x[0]!==c).map(x=>x[0])).slice(0,3)], a:0, e:CAPS.map(x=>`${x[0]}: ${lc(x[1])}`).join(". ")+"."});
+ });
+ DISP.forEach(([n,r],i)=>{
+  VQ.push({id:`disp-f-${i}`, c:1, s:"panorama", topic:"Las dispensaciones", q:`¿Qué abarca la dispensación de ${n.toLowerCase()}?`, o:[r,...rnd(DISP.filter(x=>x[1]!==r).map(x=>x[1])).slice(0,3)], a:0, e:DISP.map((x,k)=>`${k+1}. ${x[0]} (${x[1]})`).join(" · ")});
+  VQ.push({id:`disp-r-${i}`, c:1, s:"panorama", topic:"Las dispensaciones", q:`¿Qué dispensación abarca: ${lc(r)}?`, o:[n,...rnd(DISP.filter(x=>x[0]!==n).map(x=>x[0])).slice(0,3)], a:0, e:DISP.map((x,k)=>`${k+1}. ${x[0]} (${x[1]})`).join(" · ")});
+  if(i<7) VQ.push({id:`disp-n-${i}`, c:1, s:"panorama", topic:"Orden de las dispensaciones", q:`¿Qué dispensación viene inmediatamente después de ${n.toLowerCase()}?`, o:[DISP[i+1][0],...rnd(DISP.filter((x,k)=>k!==i+1&&k!==i).map(x=>x[0])).slice(0,3)], a:0, e:"Inocencia, conciencia, gobierno humano, promesa, ley, Iglesia, gran tribulación, reino milenial y estado eterno."});
+ });
+})();
+const D=(q,o,e,topic="Diagrama del libro")=>({c:1, s:"panorama", topic, q, o, a:0, e});
+VQ.push(
+ D("Según el diagrama, ¿qué capítulos abarca la época actual de la Iglesia?",["Capítulos 1 a 3","Capítulos 1 a 5","Capítulos 2 a 3","Capítulos 4 a 19"],"Capítulos 1–3: la Iglesia y las siete cartas. Capítulos 4–19: tribulación. Capítulos 20–22: milenio, gran trono blanco y estado eterno."),
+ D("Según el diagrama, ¿qué capítulos abarca el período de tribulación?",["Capítulos 4 a 19","Capítulos 4 a 7","Capítulos 6 a 18","Capítulos 4 a 22"],"La tribulación (7 años) ocupa los capítulos 4 a 19."),
+ D("Según el diagrama, ¿qué capítulos abarcan el milenio, el juicio del gran trono blanco y el estado eterno?",["Capítulos 20 a 22","Capítulo 20 solamente","Capítulos 19 a 22","Capítulos 21 y 22"],"La última sección del diagrama son los capítulos 20 a 22."),
+ D("En el diagrama, ¿qué evento separa la época de la Iglesia (caps. 1–3) del período de tribulación?",["Cristo viene por sus santos (el rapto)","Cristo viene con sus santos","El juicio del gran trono blanco","Las bodas del Cordero"],"El rapto ocurre entre los capítulos 3 y 4: Cristo viene por sus santos."),
+ D("En el diagrama, ¿qué evento separa el período de tribulación del milenio?",["Cristo viene con sus santos (segunda venida)","Cristo viene por sus santos","El tribunal de Cristo","El séptimo sello"],"Al final de los 7 años Cristo viene con sus santos y comienza el milenio."),
+ D("Según el diagrama, ¿con qué sello comienza la gran tribulación?",["Con el séptimo sello","Con el primer sello","Con el cuarto sello","Con el sexto sello"],"Seis sellos ocurren en la primera mitad; del séptimo salen las trompetas y de estas las copas, en los últimos 3½ años."),
+ D("Según el diagrama, ¿cuál es el orden de los juicios durante la tribulación?",["Sellos → trompetas → copas","Trompetas → sellos → copas","Copas → trompetas → sellos","Sellos → copas → trompetas"],"Siete sellos; del séptimo salen siete trompetas; de la séptima trompeta, siete copas."),
+ D("Según el diagrama, ¿cuánto dura la gran tribulación?",["Los últimos 3½ años de los 7","Los 7 años completos","Los primeros 3½ años","1.000 años"],"El período de tribulación son 7 años; la gran tribulación, los últimos 3½."),
+ D("Según el diagrama, ¿qué dos eventos ocurren en el cielo mientras la tierra pasa por la tribulación?",["El tribunal de Cristo y las bodas del Cordero","El juicio del gran trono blanco y el milenio","El rapto y la segunda venida","La caída de Satanás y el lago de fuego"],"Arriba en el diagrama, entre el rapto y la segunda venida: el tribunal de Cristo y las bodas del Cordero."),
+ D("Según el diagrama, ¿dónde está Satanás durante el milenio y a dónde va al final?",["En el abismo; al final, al lago de fuego","En la tierra; al final, al abismo","En el lago de fuego desde el inicio","En el cielo; al final, a la tierra"],"Durante los 1.000 años Satanás está en el abismo; después va al lago de fuego."),
+ D("En el diagrama, ¿qué ocurre entre el milenio y el estado eterno?",["El juicio del gran trono blanco","Las bodas del Cordero","El rapto","El séptimo sello"],"Tras el milenio viene el juicio del gran trono blanco y luego el estado eterno."),
+ D("Según el diagrama, ¿qué hay en el estado eterno?",["Cielo nuevo y tierra nueva","El milenio","La gran tribulación","Las siete cartas"],"El estado eterno: cielo nuevo y tierra nueva."),
+ D("Según el diagrama, ¿dónde reina Cristo durante el milenio?",["En la tierra, mil años","En el cielo, siete años","En el abismo","En la nueva Jerusalén, 3½ años"],"En el milenio Cristo reina mil años en la tierra."),
+ D("¿Cuántas dispensaciones vio la clase?",["Ocho","Siete","Cinco","Doce"],"Inocencia, conciencia, gobierno humano, promesa, ley, Iglesia, gran tribulación y reino milenial y estado eterno.","Las dispensaciones"),
+ D("¿En qué dispensación estamos hoy, según la clase?",["La Iglesia (desde Pentecostés hasta el rapto)","La ley","La gran tribulación","El reino milenial"],"Hoy vivimos la dispensación de la Iglesia, que termina con el rapto.","Las dispensaciones"),
+ D("¿Qué dispensación coincide con los capítulos 4 a 19 del diagrama?",["La gran tribulación","La Iglesia","La ley","La promesa"],"La gran tribulación va desde el rapto hasta la segunda venida: el período de tribulación del diagrama.","Las dispensaciones")
+);
+INTER.push(
+ {id:"m-caps", type:"match", c:5, s:"s3", topic:"Temas de los capítulos", q:"Une cada capítulo con su tema.", left:CAPS.map(x=>x[0]), right:CAPS.map(x=>x[1]), fixLeft:true, e:CAPS.map(x=>`${x[0]}: ${lc(x[1])}`).join(". ")+"."},
+ {id:"m-disp", type:"match", c:1, s:"panorama", topic:"Las dispensaciones", q:"Une cada dispensación con lo que abarca.", left:DISP.map(x=>x[0]), right:DISP.map(x=>x[1]), fixLeft:true, e:DISP.map((x,k)=>`${k+1}. ${x[0]} (${x[1]})`).join(" · ")},
+ {id:"m-diag", type:"match", c:1, s:"panorama", topic:"Diagrama del libro: capítulos", q:"Une cada sección del diagrama con sus capítulos.", left:DIAG.map(x=>x[0]), right:DIAG.map(x=>x[1]), e:"Caps. 1–3: la Iglesia. Caps. 4–19: tribulación. Caps. 20–22: milenio, gran trono blanco y estado eterno."},
+ {id:"o-disp", type:"order", c:1, s:"panorama", topic:"Orden de las dispensaciones", q:"Ordena las ocho dispensaciones.", items:DISP.map(x=>x[0]), e:"Inocencia, conciencia, gobierno humano, promesa, ley, Iglesia, gran tribulación, reino milenial y estado eterno."},
+ {id:"o-caps", type:"order", c:5, s:"s3", topic:"Temas de los capítulos", q:"Ordena estos temas según el capítulo en que aparecen (del 1 al 7).", items:CAPS.map(x=>x[1]), e:CAPS.map(x=>`${x[0]}: ${lc(x[1])}`).join(". ")+"."},
+ {id:"o-juicios", type:"order", c:1, s:"panorama", topic:"Diagrama del libro", q:"Ordena todo lo que aparece en el diagrama, de izquierda a derecha.", items:["La época actual de la Iglesia (las siete cartas)","Cristo viene por sus santos","Los siete sellos","Las siete trompetas","Las siete copas","Cristo viene con sus santos","El milenio (Satanás en el abismo)","El juicio del gran trono blanco","Estado eterno: cielo nuevo y tierra nueva"], e:"Así se lee el diagrama del libro."},
+ B("b-disp",1,"panorama","Las dispensaciones","Arma las ocho dispensaciones con lo que abarca cada una.", grid(DISP.map((x,k)=>`${k+1}. ${x[0]}`),DISP.map(x=>x[1])), DISP.map((x,k)=>`${k+1}. ${x[0]} (${x[1]})`).join(" · ")),
+ B("b-caps",5,"s3","Temas de los capítulos","Arma el tema de cada capítulo, del 1 al 7.", grid(CAPS.map(x=>x[0]),CAPS.map(x=>x[1])), CAPS.map(x=>`${x[0]}: ${lc(x[1])}`).join(". ")+"."),
+ B("b-diag-caps",1,"panorama","Diagrama del libro: capítulos y secciones","Arma el diagrama: capítulos de cada sección y lo que ocurre entre ellas.", [
+   ["La época actual de la Iglesia · capítulos","Capítulos 1 a 3",["Capítulos 4 a 19","Capítulos 20 a 22","Capítulos 1 a 5"]],
+   ["Entre la Iglesia y la tribulación ocurre","Cristo viene por sus santos (rapto)",["Cristo viene con sus santos","El juicio del gran trono blanco","El milenio"]],
+   ["El período de tribulación · capítulos","Capítulos 4 a 19",["Capítulos 1 a 3","Capítulos 20 a 22","Capítulos 6 a 18"]],
+   ["En el cielo durante la tribulación","El tribunal de Cristo y las bodas del Cordero",["El juicio del gran trono blanco","El lago de fuego","El milenio"]],
+   ["Entre la tribulación y el milenio ocurre","Cristo viene con sus santos (segunda venida)",["Cristo viene por sus santos","Las bodas del Cordero","El séptimo sello"]],
+   ["El milenio y lo que sigue · capítulos","Capítulos 20 a 22",["Capítulos 4 a 19","Capítulos 1 a 3","Capítulo 19"]],
+   ["Al final del milenio","El juicio del gran trono blanco",["El rapto","Las bodas del Cordero","El primer sello"]],
+   ["El estado eterno","Cielo nuevo y tierra nueva",["El milenio en la tierra","La gran tribulación","El abismo"]]],
+   "Caps. 1–3 Iglesia → rapto → caps. 4–19 tribulación (en el cielo: tribunal y bodas) → segunda venida → caps. 20–22 milenio, gran trono blanco y estado eterno."),
+ B("b-versiculos-cap1",1,"s1","Versículos del capítulo 1","Escoge el tema de cada pasaje del capítulo 1.", grid(["Apocalipsis 1:1-3","Apocalipsis 1:4-8","Apocalipsis 1:9-20","Apocalipsis 1:19","Apocalipsis 1:20"],["Una bienaventuranza más de Jesucristo","El saludo a las iglesias","La visión de Cristo glorificado","La orden de escribir: el bosquejo","Las siete estrellas y los siete candeleros"]), "1:1-3 bienaventuranza; 1:4-8 saludo; 1:9-20 visión; 1:19 bosquejo; 1:20 estrellas y candeleros."),
+ B("b-versiculos-cartas",3,"s2","Pasaje de cada carta","Escoge el pasaje de la carta a cada iglesia.", grid(IGL.map((g,i)=>`${i+1}. ${g.n}`),IGL.map(g=>"Apocalipsis "+g.ref.replace("Ap. ",""))), "Capítulo 2: Éfeso (1-7), Esmirna (8-11), Pérgamo (12-17), Tiatira (18-29). Capítulo 3: Sardis (1-6), Filadelfia (7-13), Laodicea (14-22)."),
+ B("b-versiculos-4a7",5,"s3","Pasajes de los capítulos 4 al 7","Escoge el tema de cada pasaje.", grid(["Apocalipsis 4:1-5","Apocalipsis 4:6-8","Apocalipsis 4:9-11","Apocalipsis 5:1-7","Apocalipsis 5:8-10","Apocalipsis 5:11-14","Apocalipsis 6:12-17","Apocalipsis 7:1-17"],["El trono y los 24 ancianos","Los cuatro seres vivientes","La adoración al Soberano","Alguien digno de desatar los sellos","La dignidad del Cordero","La adoración celestial al Cordero","El sexto sello","Los sellados por Dios"]), "Pasajes de las cosas que han de suceder."),
+ B("b-versiculos-sellos",5,"s3","Pasaje de cada sello","Escoge el pasaje de cada sello.", grid(["Primer sello","Segundo sello","Tercer sello","Cuarto sello","Quinto sello","Sexto sello"],["Apocalipsis 6:1-2","Apocalipsis 6:3-4","Apocalipsis 6:5-6","Apocalipsis 6:7-8","Apocalipsis 6:9-11","Apocalipsis 6:12-17"]), "6:1-2, 6:3-4, 6:5-6, 6:7-8, 6:9-11 y 6:12-17.")
+);
+INTER.push({id:"m-vers-cartas", type:"match", c:3, s:"s2", topic:"Pasaje de cada carta", q:"Une cada iglesia con el pasaje de su carta.", left:IGL.map(g=>g.n), right:IGL.map(g=>"Apocalipsis "+g.ref.replace("Ap. ","")), e:"Capítulo 2: Éfeso, Esmirna, Pérgamo, Tiatira. Capítulo 3: Sardis, Filadelfia, Laodicea."});
+VQ.forEach(q=>q.type="mc");
+
+/* ---------- RENDER MAPA ---------- */
+const mapEl = document.getElementById("map");
+function verseHTML(v){
+  return `<div class="verse"><b>${v[0]}</b>${v[1]?`<span class="ver">${v[1]}</span>`:""}<span class="g">${v[2]}</span></div>`;
+}
+mapEl.innerHTML = SECTIONS.map((s,i)=>`
+<details class="block" id="${s.id}" ${i<2?"open":""} data-cl="${s.clases.join(",")}">
+  <summary>
+    <span class="roman ${s.num==="✦"?"pan":""}">${s.num}</span>
+    <span class="shead">
+      <h2>${s.title}</h2>
+      <span class="meta">${s.ref} ${s.clases.map(badge).join(" ")}</span>
+    </span>
+    <svg class="chev" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </summary>
+  <div class="sbody">
+    ${s.intro?`<p class="merge">${s.intro}</p>`:""}
+    ${s.merge?`<p class="merge">Unión de clases: ${s.merge}</p>`:""}
+    ${s.credit?`<p class="credit">${s.credit}</p>`:""}
+    ${s.points.map(p=>`
+      <div class="point c${p.c}" data-c="${p.c}${p.badgeExtra?","+p.badgeExtra:""}${p.vc?","+p.vc:""}">
+        <h3>${p.t} ${badge(p.c)}${p.tag?`<span class="tagb">${p.tag}</span>`:""}${p.badgeExtra?" "+badge(p.badgeExtra):""}</h3>
+        ${p.d?`<p>${p.d}</p>`:""}
+        ${p.list?`<ul>${p.list.map(x=>`<li>${x}</li>`).join("")}</ul>`:""}
+        ${typeof p.html==="function"?p.html():(p.html||"")}
+        ${p.v?`<div class="verses">${p.v.map(verseHTML).join("")}</div>`:""}
+      </div>`).join("")}
+  </div>
+</details>`).join("");
+
+/* Arco del hero */
+const arc = document.getElementById("arcnodes");
+const nodes = SECTIONS.slice(1);
+nodes.forEach((s,i)=>{
+  const t = Math.PI*(1 - (i+0.5)/nodes.length);
+  const x = 450 + 360*Math.cos(t), y = 230 - 205*Math.sin(t);
+  const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+  g.setAttribute("class","node"); g.setAttribute("tabindex","0"); g.setAttribute("role","link");
+  g.setAttribute("aria-label",`Sección ${s.num}: ${s.title}`);
+  g.innerHTML = `<circle cx="${x}" cy="${y}" r="20" fill="#F4F1EA" stroke="#E39B2E" stroke-width="3"/>
+    <text x="${x}" y="${y+6}" text-anchor="middle" font-size="16" font-weight="700" fill="#1B2440">${s.num}</text>
+    <text x="${x}" y="${y+40}" text-anchor="middle" font-size="14" fill="#C9CFE0">${s.short||s.title}</text>`;
+  const go = ()=>{ showTab("mapa"); const d=document.getElementById(s.id); d.open=true; d.scrollIntoView(); };
+  g.addEventListener("click",go);
+  g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();go();} });
+  arc.appendChild(g);
+});
+
+/* Filtro por clase */
+const legend = document.getElementById("legend");
+let active = null;
+[1,2,3,4,5,6].forEach(c=>{
+  const b=document.createElement("button");
+  b.className=`cbtn c${c}`; b.textContent=CL[c]; b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{ active = active===c?null:c; applyFilter(); };
+  legend.appendChild(b);
+});
+function applyFilter(){
+  legend.querySelectorAll(".cbtn").forEach((b,i)=>b.setAttribute("aria-pressed", String(active===i+1)));
+  mapEl.classList.toggle("dim", !!active);
+  mapEl.querySelectorAll(".block").forEach(bl=>{
+    let any=false;
+    bl.querySelectorAll(".point").forEach(p=>{
+      const hit = active && p.dataset.c.split(",").includes(String(active));
+      p.classList.toggle("hit", !!hit); if(hit) any=true;
+    });
+    bl.classList.toggle("hasHit", any);
+    if(any) bl.open = true;
+  });
+}
+
+/* ---------- TABS ---------- */
+function showTab(t){
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected", String(b.dataset.tab===t)));
+  ["mapa","quiz"].forEach(x=>document.getElementById("p-"+x).hidden = x!==t);
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ showTab(b.dataset.tab); window.scrollTo({top:document.querySelector(".nav").offsetTop}); });
+
+/* ---------- QUIZ ---------- */
+const qEl=document.getElementById("quiz");
+const ROUND_N=25, STORE="apoc-repaso-v4";
+const secTitle = id => { const s=SECTIONS.find(x=>x.id===id); return (s.num!=="✦"?s.num+". ":"")+s.title; };
+function goSec(id){ showTab("mapa"); const d=document.getElementById(id); d.open=true; d.scrollIntoView(); }
+window.goSec = goSec;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+const esc = s => String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+QUIZ.forEach((q,i)=>{q.id="q"+i; q.type="mc";}); VQ.forEach((q,i)=>{ if(!q.id) q.id="d"+i; }); BIBLE.forEach((q,i)=>{q.id="b"+i; q.type="mc";}); GEN.forEach(q=>q.type="mc");
+const ALL=[VERSE_Q,...INTER,...QUIZ,...GEN,...BIBLE,...VQ];
+INTER.forEach(q=>{ if(q.type==="match" && (q.left.join()===IGL.map(g=>g.n).join() || /sello/i.test(q.left[0]) || /Jinete/.test(q.left[0]))) q.fixLeft=true; });
+const BY=Object.fromEntries(ALL.map(q=>[q.id,q]));
+const isInter=q=>q.type==="match"||q.type==="order"||q.type==="build";
+function load(){ try{ const r=JSON.parse(localStorage.getItem(STORE)||"null"); if(r&&r.seen) return r; }catch(e){} return {attempt:0,verseDone:false,periodsDone:false,missed:[],seen:{},last:[]}; }
+let S=load(); S.right=S.right||{}; S.res=S.res||{};
+const MASTER=2;  /* aciertos para dar una pregunta por dominada */
+const mastered=q=>(S.right[q.id]||0)>=MASTER && S.res[q.id]!==false;
+function save(){ try{ localStorage.setItem(STORE,JSON.stringify(S)); }catch(e){} }
+let ROUND=[], qi=0, res=[];
+
+function rank(pool){ return pool.map(q=>[(S.seen[q.id]||0)*0.6+Math.random()*2,q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); }
+function buildRound(){
+  const ch=[]; const add=q=>{ if(q && !ch.includes(q) && ch.length<ROUND_N) ch.push(q); };
+  if(!S.verseDone) add(VERSE_Q);
+  if(!S.periodsDone) add(BY["m-periodos"]);
+  if(!mastered(BY["o-iglesias"])) add(BY["o-iglesias"]);   /* ordenar las siete iglesias: hasta dominarla */
+  /* Repite al azar algunas del intento anterior: unas que fallaste y otras que acertaste */
+  const prevWrong=shuffle(S.missed.map(id=>BY[id]).filter(q=>q && q!==VERSE_Q));
+  const prevRight=shuffle(S.last.filter(id=>!S.missed.includes(id)).map(id=>BY[id]).filter(q=>q && q!==VERSE_Q && !mastered(q)));
+  const nW=Math.min(prevWrong.length, 2+Math.floor(Math.random()*3));   // 2 a 4 falladas
+  const nR=Math.min(prevRight.length, 1+Math.floor(Math.random()*3));   // 1 a 3 acertadas
+  const again={}; prevWrong.slice(0,nW).forEach(q=>{ add(q); again[q.id]="wrong"; }); prevRight.slice(0,nR).forEach(q=>{ add(q); again[q.id]="right"; });
+  /* El resto: preguntas distintas al intento anterior, al azar */
+  const fresh=q=>!ch.includes(q) && !S.last.includes(q.id) && !mastered(q);
+  const need=(n,f)=>Math.max(0,n-ch.filter(f).length);
+  const cartas=BUILD.filter(q=>IGL.some(g=>q.id===`b-${g.n}`)), otras=BUILD.filter(q=>!cartas.includes(q));
+  if(!ch.some(q=>cartas.includes(q))) rank(cartas.filter(fresh)).slice(0,1).forEach(add);
+  if(!ch.some(q=>otras.includes(q))) rank(otras.filter(fresh)).slice(0,2).forEach(add);
+  rank(INTER.filter(fresh)).slice(0,need(8,isInter)).forEach(add);
+  rank(BIBLE.filter(fresh)).slice(0,2).forEach(add);
+  const vers=VQ.filter(q=>q.id.startsWith("v-")), capsq=VQ.filter(q=>q.id.startsWith("cap-")), dispq=VQ.filter(q=>q.id.startsWith("disp-")), diagq=VQ.filter(q=>!q.id);
+  rank(vers.filter(fresh)).slice(0,4).forEach(add);
+  rank(capsq.filter(fresh)).slice(0,1).forEach(add);
+  rank(dispq.filter(fresh)).slice(0,1).forEach(add);
+  rank(diagq.filter(fresh)).slice(0,2).forEach(add);
+  const pool=[...QUIZ,...GEN];
+  [["panorama",6],["s1",5],["s2",6],["s3",6]].forEach(([s,n])=>{
+    rank(pool.filter(q=>q.s===s && fresh(q))).slice(0,need(n,q=>q.s===s)).forEach(add);
+  });
+  rank([...pool,...BIBLE,...VQ].filter(fresh)).forEach(add);
+  rank(ALL.filter(q=>q!==VERSE_Q && !ch.includes(q) && !mastered(q))).forEach(add);
+  rank(ALL.filter(q=>q!==VERSE_Q && !ch.includes(q))).forEach(add);  /* solo si ya dominaste casi todo */
+  const rest=shuffle(ch.filter(q=>q!==VERSE_Q));
+  return {list: ch.includes(VERSE_Q)?[VERSE_Q,...rest]:rest, again};
+}
+function prep(q){
+  const x={...q};
+  if(x.type==="mc"){ x.opts=shuffle(x.o.map((t,i)=>({t,ok:i===x.a}))); x.ans=x.opts.findIndex(o=>o.ok); }
+  if(x.type==="match"){
+    const n=x.left.length; x.LO = x.fixLeft ? [...Array(n).keys()] : shuffle([...Array(n).keys()]);
+    for(let tries=0;tries<80;tries++){ x.R=shuffle(x.right.map((t,k)=>({t,k}))); const al=x.R.filter((r,j)=>r.k===x.LO[j]).length; if(al<=(n<=4?0:1)) break; }
+    x.pairs={}; x.sel=null; }
+  if(x.type==="build"){ x.S=x.slots.map(([lab,ans,ds])=>({lab,ans,opts:shuffle([ans,...ds.filter(d=>d!==ans)])})); }
+  if(x.type==="order"){ x.pool=shuffle(x.items.map((t,k)=>({t,k}))); x.seq=[]; }
+  return x;
+}
+function newRound(){
+  S.attempt++; save();
+  const r=buildRound();
+  ROUND=r.list.map(q=>{ const x=prep(q); x.again=r.again[q.id]||""; return x; });
+  qi=0; res=[]; renderQ();
+}
+
+function renderQ(){
+  const q=ROUND[qi];
+  const tag = q.type==="verse"?"✍️ Escribe el versículo":q.type==="match"?"🔗 Unir columnas":q.type==="order"?"↕️ Ordenar":q.type==="build"?"🧩 Arma la carta":"";
+  qEl.innerHTML=`
+   <div class="qtop"><span>Intento ${S.attempt} · Pregunta ${qi+1} de ${ROUND.length}</span><span>${badge(q.c)}</span></div>
+   <div class="bar"><i style="width:${(qi/ROUND.length)*100}%"></i></div>
+   <div class="qcard">
+     <span style="color:var(--muted);font-size:.88rem">${secTitle(q.s)}</span>
+     <div class="qtags">${tag?`<span class="qt">${tag}</span>`:""}${q.again==="wrong"?`<span class="qt again">↺ La fallaste en el intento anterior</span>`:q.again==="right"?`<span class="qt">↺ Repaso: la acertaste antes</span>`:""}${q.type==="verse"&&S.attempt>1?`<span class="qt again">Sale en cada intento hasta que lo escribas bien</span>`:""}${q.tb?`<span class="qt">📖 Texto bíblico</span>`:""}</div>
+     ${q.b?`<div class="bible">📖 Abre tu Biblia en <b>${q.ref}</b></div>`:""}
+     <h2>${q.q}</h2>
+     <div id="qbody"></div>
+     <div id="fb"></div>
+   </div>`;
+  ({mc:bodyMC,verse:bodyVerse,match:bodyMatch,order:bodyOrder,build:bodyBuild})[q.type](q);
+}
+function bodyMC(q){
+  const b=document.getElementById("qbody");
+  b.innerHTML=`<div class="opts">${q.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${"ABCD"[i]}</span><span>${o.t}</span></button>`).join("")}</div>`;
+  b.querySelectorAll(".opt").forEach(x=>x.onclick=()=>{
+    const i=+x.dataset.i, ok=i===q.ans;
+    b.querySelectorAll(".opt").forEach((y,j)=>{ y.disabled=true; if(j===q.ans)y.classList.add("right"); else if(j===i)y.classList.add("wrong"); });
+    finish(ok, ok?"":`La respuesta correcta es <b>${"ABCD"[q.ans]}. ${q.opts[q.ans].t}</b>.<br>`);
+  });
+}
+
+/* Versículo */
+const nz=w=>w.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
+const lw=w=>w.toLowerCase().replace(/[^\p{L}\p{N}]/gu,"");
+function diffVerse(inp){
+  const T=VERSE_TXT.split(/\s+/), U=inp.trim().split(/\s+/).filter(w=>nz(w));
+  const a=T.map(nz), b=U.map(nz), n=a.length, m=b.length;
+  const L=Array.from({length:n+1},()=>Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--) L[i][j]=a[i]===b[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+  let i=0,j=0; const out=[], acc=[];
+  while(i<n||j<m){
+    if(i<n&&j<m&&a[i]===b[j]){ out.push(`<span class="w ok">${T[i]}</span>`); if(lw(T[i])!==lw(U[j])) acc.push(`${esc(lw(U[j]))} → ${lw(T[i])}`); i++; j++; }
+    else if(j>=m || (i<n && L[i+1][j]>=L[i][j+1])){ out.push(`<span class="w miss" title="Faltó">${T[i]}</span>`); i++; }
+    else { out.push(`<span class="w extra" title="Sobra o está mal escrita">${esc(U[j])}</span>`); j++; }
+  }
+  return {ok: L[0][0]===n && m===n, html: out.join(" "), acc};
+}
+function bodyVerse(q){
+  const b=document.getElementById("qbody");
+  b.innerHTML=`<p class="hint">No importan las mayúsculas ni los signos de puntuación; cada palabra debe coincidir con la NBLA.</p>
+   <textarea id="vt" rows="4" class="vt" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="Escribe aquí el versículo…"></textarea>
+   <div class="actions"><button class="btn" id="chk">Comprobar</button></div>`;
+  const ta=document.getElementById("vt"); ta.focus();
+  document.getElementById("chk").onclick=()=>{
+    if(!ta.value.trim()){ ta.focus(); return; }
+    const d=diffVerse(ta.value); ta.disabled=true; document.getElementById("chk").remove();
+    const legend=`<div class="vlegend"><span class="w ok">correcta</span> <span class="w miss">faltó</span> <span class="w extra">sobra o mal escrita</span></div>`;
+    finish(d.ok, `<div class="vdiff">${d.html}</div>${d.ok?"":legend}${d.acc.length?`<p class="hint">Revisa las tildes: ${d.acc.join(", ")}.</p>`:""}<p class="vfull"><b>Apocalipsis 1:19 (NBLA):</b> ${VERSE_TXT}</p>`);
+  };
+}
+
+/* Unir columnas */
+function bodyMatch(q){
+  const b=document.getElementById("qbody");
+  b.innerHTML=`<p class="hint">Toca un elemento de la izquierda y luego su pareja a la derecha. Toca una pareja ya hecha para cambiarla.</p>
+   <div class="mgrid"><div class="mcol" id="ml"></div><div class="mcol" id="mr"></div></div>
+   <div class="actions"><button class="btn" id="chk" disabled>Comprobar</button></div>`;
+  const owner=j=>{ for(const l in q.pairs) if(q.pairs[l]===j) return +l; return null; };
+  function draw(done){
+    const num=i=>q.LO.indexOf(i)+1;
+    document.getElementById("ml").innerHTML=q.LO.map(i=>{ const t=q.left[i];
+      const st = done ? (q.R[q.pairs[i]].k===i?"right":"wrong") : "";
+      return `<button class="mi ${q.sel===i?"sel":""} ${q.pairs[i]!=null?"paired":""} ${st}" data-l="${i}" ${done?"disabled":""}><span class="k">${num(i)}</span><span>${t}</span></button>`;}).join("");
+    document.getElementById("mr").innerHTML=q.R.map((r,j)=>{ const o=owner(j);
+      return `<button class="mo ${o!=null?"paired":""} ${done&&o!=null?(r.k===o?"right":"wrong"):""}" data-r="${j}" ${done?"disabled":""}><span class="k">${o!=null?num(o):""}</span><span>${r.t}</span></button>`;}).join("");
+    if(done) return;
+    b.querySelectorAll(".mi").forEach(x=>x.onclick=()=>{ const i=+x.dataset.l; q.sel=i; draw(); });
+    b.querySelectorAll(".mo").forEach(x=>x.onclick=()=>{ const j=+x.dataset.r, o=owner(j);
+      if(q.sel!=null){ if(o!=null) delete q.pairs[o]; q.pairs[q.sel]=j; const nxt=q.LO.find(i=>q.pairs[i]==null); q.sel = nxt==null?null:nxt; }
+      else if(o!=null){ delete q.pairs[o]; q.sel=o; }
+      draw(); });
+    document.getElementById("chk").disabled = Object.keys(q.pairs).length<q.left.length;
+  }
+  q.sel=q.LO[0]; draw();
+  document.getElementById("chk").onclick=()=>{
+    const ok=q.left.every((_,i)=>q.R[q.pairs[i]].k===i);
+    draw(true); document.getElementById("chk").remove();
+    const nok=q.left.filter((_,i)=>q.R[q.pairs[i]].k===i).length;
+    finish(ok, `${ok?"":`Acertaste ${nok} de ${q.left.length} parejas. `}Parejas correctas:<ul class="plist">${q.LO.map(i=>`<li><b>${q.left[i]}</b> → ${q.right[i]}</li>`).join("")}</ul>`);
+  };
+}
+
+/* Ordenar */
+function bodyOrder(q){
+  const b=document.getElementById("qbody");
+  b.innerHTML=`<p class="hint">Toca las opciones en el orden correcto. Toca una ya colocada para devolverla.</p>
+   <ol class="oseq" id="oseq"></ol><div class="opool" id="opool"></div>
+   <div class="actions"><button class="btn ghost" id="ores">Reiniciar</button><button class="btn" id="chk" disabled>Comprobar</button></div>`;
+  function draw(done){
+    document.getElementById("oseq").innerHTML = q.seq.length? q.seq.map((it,p)=>`<li><button class="ochip ${done?(it.k===p?"right":"wrong"):""}" data-p="${p}" ${done?"disabled":""}>${it.t}</button></li>`).join("") : `<li class="oempty">Aquí aparecerá tu orden</li>`;
+    document.getElementById("opool").innerHTML = q.pool.filter(it=>!q.seq.includes(it)).map(it=>`<button class="ochip pool" data-k="${it.k}">${it.t}</button>`).join("");
+    if(done) return;
+    b.querySelectorAll(".ochip.pool").forEach(x=>x.onclick=()=>{ q.seq.push(q.pool.find(it=>it.k===+x.dataset.k)); draw(); });
+    b.querySelectorAll(".oseq .ochip").forEach(x=>x.onclick=()=>{ q.seq.splice(+x.dataset.p,1); draw(); });
+    document.getElementById("chk").disabled = q.seq.length<q.items.length;
+  }
+  draw();
+  document.getElementById("ores").onclick=()=>{ q.seq=[]; draw(); };
+  document.getElementById("chk").onclick=()=>{
+    const ok=q.seq.every((it,p)=>it.k===p);
+    draw(true); document.querySelector("#qbody .actions").remove();
+    finish(ok, `${ok?"":"El orden correcto es:"}${ok?"":`<ol class="plist">${q.items.map(t=>`<li>${t}</li>`).join("")}</ol>`}`);
+  };
+}
+
+/* Armar la carta */
+function bodyBuild(q){
+  const b=document.getElementById("qbody");
+  b.innerHTML=`<p class="hint">Escoge en cada lista la opción que corresponde a esta iglesia.</p>
+   <div class="build">${q.S.map((s,i)=>`<label class="bslot"><span class="blab">${s.lab}</span>
+     <select data-i="${i}"><option value="">— Escoge —</option>${s.opts.map((o,j)=>`<option value="${j}">${o}</option>`).join("")}</select>
+     <span class="bfix" id="bf${i}"></span></label>`).join("")}</div>
+   <div class="actions"><button class="btn" id="chk" disabled>Comprobar</button></div>`;
+  const sels=[...b.querySelectorAll("select")];
+  sels.forEach(s=>s.onchange=()=>{ document.getElementById("chk").disabled=sels.some(x=>x.value===""); });
+  document.getElementById("chk").onclick=()=>{
+    let nok=0;
+    sels.forEach((s,i)=>{ const sl=q.S[i], ok=sl.opts[+s.value]===sl.ans; s.disabled=true; s.parentElement.classList.add(ok?"right":"wrong"); if(ok) nok++; else document.getElementById("bf"+i).textContent="Correcto: "+sl.ans; });
+    document.getElementById("chk").remove();
+    finish(nok===q.S.length, nok===q.S.length?"":`Acertaste ${nok} de ${q.S.length}.<br>`);
+  };
+}
+
+function finish(ok, detail){
+  const q=ROUND[qi]; res[qi]=ok; S.seen[q.id]=(S.seen[q.id]||0)+1; S.res[q.id]=ok; if(ok) S.right[q.id]=(S.right[q.id]||0)+1;
+  document.getElementById("fb").innerHTML=`
+   <div class="fb ${ok?"ok":"no"}">
+     <strong>${ok?"✓ Correcto":"✗ Incorrecto"}</strong>
+     ${detail||""}
+     <div style="margin-top:6px">${q.e}</div>
+     <div class="rev">Tema: ${q.topic} · <a href="#" onclick="goSec('${q.s}');return false;">ver en el mapa</a></div>
+   </div>
+   <div class="actions"><button class="btn" id="next">${qi<ROUND.length-1?"Siguiente pregunta":"Ver resultados"}</button></div>`;
+  const n=document.getElementById("next"); n.focus({preventScroll:true});
+  n.onclick=()=>{ qi++; qi<ROUND.length?renderQ():endRound(); qEl.scrollIntoView({block:"start"}); };
+}
+function endRound(){
+  S.missed=ROUND.filter((q,i)=>!res[i]).map(q=>q.id);
+  S.last=ROUND.map(q=>q.id);
+  ROUND.forEach((q,i)=>{ if(res[i]&&q.id===VERSE_Q.id) S.verseDone=true; if(res[i]&&q.id==="m-periodos") S.periodsDone=true; });
+  save(); renderResults();
+}
+function renderResults(){
+  const correct=res.filter(Boolean).length, pct=Math.round(correct/ROUND.length*100);
+  const SEC=[["panorama","Panorama","c1"],["s1","I. Lo que has visto","c2"],["s2","II. Lo que es","c3"],["s3","III. Lo que ha de ser","c4"]];
+  const by={}; ROUND.forEach((q,i)=>{ by[q.s]=by[q.s]||{t:0,ok:0,miss:[]}; by[q.s].t++; if(res[i])by[q.s].ok++; else by[q.s].miss.push(q); });
+  const msg = pct>=90?"Excelente dominio del repaso.":pct>=70?"Buen nivel; repasa los temas marcados abajo.":pct>=50?"Vas a medio camino; dedica un repaso a las secciones con más fallos.":"Conviene repasar el mapa antes de volver a intentarlo.";
+  const vi=ROUND.findIndex(q=>q.id===VERSE_Q.id);
+  const vmsg = S.verseDone ? (vi>=0?"✍️ ¡Escribiste bien Apocalipsis 1:19! Ya no saldrá en los próximos intentos.":"✍️ Apocalipsis 1:19 ya lo tienes aprendido.") : "✍️ Apocalipsis 1:19 volverá a salir en el próximo intento.";
+  const miss=SEC.filter(([s])=>by[s]&&by[s].miss.length);
+  qEl.innerHTML=`
+   <div class="qcard">
+     <span style="color:var(--muted)">Resultado del intento ${S.attempt}</span>
+     <div class="score">${correct} / ${ROUND.length}</div>
+     <p style="margin:0">${pct}% · ${msg}</p>
+     <p style="margin:.5rem 0 0">${vmsg}</p>
+     <p style="margin:.4rem 0 0">🏅 Preguntas dominadas (acertadas ${MASTER} o más veces): <b>${ALL.filter(mastered).length}</b> de ${ALL.length}. Ya no se repiten; si fallas una, vuelve a salir.</p>
+     <div class="cls">${SEC.filter(([s])=>by[s]).map(([s,n,c])=>{const v=by[s];const p=Math.round(v.ok/v.t*100);return `<div class="crow ${c}"><span>${n}</span><span class="track"><i style="width:${p}%"></i></span><span>${v.ok}/${v.t}</span></div>`}).join("")}</div>
+     ${miss.length?`<div class="miss"><h2 style="font-size:1.15rem">Lo que te hace falta repasar</h2>
+       <p class="hint">El próximo intento trae preguntas distintas y al azar, y repite algunas de esta ronda, tanto de las que fallaste como de las que acertaste.</p>
+       ${miss.map(([s,n])=>`<h3>${n} · acertaste ${by[s].ok} de ${by[s].t}</h3><ul>${by[s].miss.map(q=>`<li>${q.topic}${q.b?` (lee ${q.ref})`:""} — <a href="#" onclick="goSec('${q.s}');return false;">ver en el mapa</a></li>`).join("")}</ul>`).join("")}
+     </div>`:`<p class="miss">No fallaste ninguna. El próximo intento traerá preguntas distintas y repetirá algunas al azar.</p>`}
+     <div class="actions"><button class="btn ghost" id="reset">Reiniciar progreso</button><button class="btn ghost" id="toMap">Ir al mapa</button><button class="btn" id="again">Nuevo intento</button></div>
+   </div>`;
+  document.getElementById("again").onclick=()=>{ newRound(); qEl.scrollIntoView({block:"start"}); };
+  document.getElementById("toMap").onclick=()=>showTab("mapa");
+  const rb=document.getElementById("reset"); let armed=false;
+  rb.onclick=()=>{ if(!armed){ armed=true; rb.textContent="¿Seguro? Toca otra vez"; return; }
+    S={attempt:0,verseDone:false,periodsDone:false,missed:[],seen:{},last:[],right:{},res:{}}; save(); newRound(); };
+}
+newRound();
+</script>
+</body>
+</html>
